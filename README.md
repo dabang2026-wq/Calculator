@@ -51,3 +51,14 @@ Open the app once while online so the service worker can cache the app shell. Th
 ## License
 
 MIT.
+
+
+## Responsive UX update
+The interface includes responsive layouts for phones, tablets, desktop, and short landscape screens; accessible focus indicators; zoom-friendly viewport settings; safe-area spacing; and horizontally scrollable history on small screens.
+
+
+## Daylight usability update
+
+The latest daylight-first interface uses stronger text contrast, larger number inputs, clearer focus states, a more visible Calculate button, improved history modal sizing, better small-screen spacing, and landscape handling. The app keeps English, Myanmar, and Thai options, saved history, remaining-length tracking, and the existing calculation logic.
+
+The service-worker cache was versioned so browsers can pick up the updated app shell. After deployment, refresh the app once while online.

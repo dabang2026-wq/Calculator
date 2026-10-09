@@ -2,18 +2,18 @@
 <html lang="en" class="daylight">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Simple Cord Length Calculator — Developed by จาตูไหม่</title>
   
   <!-- PWA & Mobile Meta Tags -->
-  <meta name="theme-color" content="#f6f7f9" />
+  <meta name="theme-color" content="#ffffff" />
   <meta name="description" content="Simple Cord Length Calculator with saved entries, cut tracking, and remaining cord length. Developed by จาตูไหม่." />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Cord Calc" />
 
   <!-- Embedded Web App Manifest for Offline PWA Installation -->
-  <link rel="manifest" href='data:application/manifest+json,{"name":"Cord Calculator %26 Cut Sequencer","short_name":"Cord Calc","start_url":"./","display":"standalone","background_color":"%23020617","theme_color":"%23020617","icons":[{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23f59e0b%22/><path d=%22M30 30 L70 70 M70 30 L30 70%22 stroke=%22%23020617%22 stroke-width=%2212%22 stroke-linecap=%22round%22/></svg>","sizes":"512x512","type":"image/svg+xml"}]}' />
+  <link rel="manifest" href='data:application/manifest+json,{"name":"Cord Calculator %26 Cut Sequencer","short_name":"Cord Calc","start_url":"./","display":"standalone","background_color":"%23eef2f6","theme_color":"%23ffffff","icons":[{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23f59e0b%22/><path d=%22M30 30 L70 70 M70 30 L30 70%22 stroke=%22%23020617%22 stroke-width=%2212%22 stroke-linecap=%22round%22/></svg>","sizes":"512x512","type":"image/svg+xml"}]}' />
   
   <!-- SVG Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f59e0b'/><path d='M30 30 L70 70 M70 30 L30 70' stroke='%23020617' stroke-width='12' stroke-linecap='round'/></svg>" />
@@ -554,6 +554,168 @@
   }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 </style>
+
+
+<style id="responsive-ux-v2">
+  /* Responsive layout and accessible touch behavior */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { min-width: 320px; scroll-padding-top: 5rem; }
+  body { min-width: 320px; overflow-x: hidden; }
+  button, a, input, select, textarea { touch-action: manipulation; }
+  button, [role="button"] { min-height: 44px; }
+  :focus-visible { outline: 3px solid #f59e0b !important; outline-offset: 3px; }
+  input, select, textarea { font-size: 16px; }
+  img, svg, canvas, video { max-width: 100%; }
+  .overflow-x-auto { max-width: 100%; }
+  #historyModal > div { min-width: 0; }
+  #historyModal table { white-space: nowrap; }
+  #languageMenu { max-width: calc(100vw - 1.25rem); }
+  #dispCuttingPoint, #dispResult, #dispRemaining, #dispMeterCheck { overflow-wrap: anywhere; }
+
+  @media (min-width: 1024px) {
+    main > .max-w-5xl { max-width: 76rem; }
+    .glass-card { transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease; }
+    .glass-card:hover { box-shadow: 0 8px 24px rgba(15,23,42,.08); }
+  }
+  @media (min-width: 601px) and (max-width: 1023px) {
+    main > .max-w-5xl { padding-left: 1rem; padding-right: 1rem; }
+    .glass-card { padding: 1.15rem !important; }
+    #dispCuttingPoint, #dispResult, #dispRemaining { font-size: clamp(1.5rem, 4vw, 2rem) !important; }
+  }
+  @media (max-width: 600px) {
+    html { scroll-padding-top: 4.25rem; }
+    body { padding-bottom: calc(6.25rem + env(safe-area-inset-bottom)) !important; }
+    header { padding-top: env(safe-area-inset-top); }
+    header .max-w-5xl { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem; }
+    header .max-w-5xl > div:first-child { min-width: 0; flex: 1 1 100%; }
+    header .max-w-5xl > div:first-child > div { min-width: 0; }
+    header #statusDescription { display: none; }
+    #statusBadge { max-width: 45vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    header .max-w-5xl > div:nth-child(2) { width: 100%; }
+    header .max-w-5xl > div:nth-child(2) span:first-child { font-size: .65rem; }
+    header .max-w-5xl > div:nth-child(2) span:last-child { font-size: 1.2rem; }
+    main { width: 100%; }
+    main > .max-w-5xl { width: 100%; max-width: 100%; padding-left: .65rem !important; padding-right: .65rem !important; }
+    main .grid { grid-template-columns: minmax(0, 1fr) !important; gap: .8rem !important; }
+    .glass-card { min-width: 0; border-radius: 1rem !important; padding: .9rem !important; }
+    .glass-card .flex { min-width: 0; }
+    .glass-card label, .glass-card p, .glass-card span { overflow-wrap: anywhere; }
+    input[type="number"], input[type="text"], input[type="search"], select, textarea { width: 100%; min-height: 52px; font-size: 16px !important; }
+    #btnCalculate { position: fixed !important; left: .65rem; right: .65rem; bottom: calc(.55rem + env(safe-area-inset-bottom)); width: calc(100% - 1.3rem); z-index: 45; min-height: 54px; box-shadow: 0 8px 24px rgba(146,64,14,.28); }
+    #toastContainer { bottom: calc(4.9rem + env(safe-area-inset-bottom)) !important; }
+    .grid.grid-cols-3 { grid-template-columns: 1fr !important; gap: .55rem !important; }
+    .grid.grid-cols-3 > div { justify-content: flex-start !important; }
+    #historyModal { padding: .45rem !important; }
+    #historyModal > div { max-height: calc(100dvh - 1rem); padding: .85rem !important; }
+    #historyModal .flex.items-center.justify-between { gap: .5rem; }
+    #historyModal h3 { font-size: 1rem; }
+    #historyModal button { min-height: 42px; }
+    #historyModal .overflow-y-auto { overflow-x: auto; }
+    footer { padding-left: .8rem; padding-right: .8rem; }
+  }
+  @media (max-width: 380px) {
+    header h1 { font-size: .72rem !important; line-height: 1.25 !important; }
+    #languageToggleLabel { display: none; }
+    .glass-card { padding: .75rem !important; }
+    #dispCuttingPoint, #dispResult, #dispRemaining { font-size: 1.55rem !important; }
+    #seqBadge { font-size: .62rem !important; }
+  }
+  @media (max-height: 500px) and (orientation: landscape) {
+    header { position: relative !important; }
+    #btnCalculate { position: static !important; width: 100% !important; }
+    body { padding-bottom: 1rem !important; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+</style>
+
+
+  <!-- Daylight usability update: high contrast, clearer hierarchy, comfortable field controls -->
+  <style id="daylight-usability-v3">
+    :root {
+      --day-bg: #eef2f6;
+      --day-surface: #ffffff;
+      --day-surface-2: #f8fafc;
+      --day-border: #cbd5e1;
+      --day-text: #0b1220;
+      --day-muted: #475569;
+      --day-accent: #9a3412;
+    }
+    html, body { min-width: 320px; max-width: 100%; overflow-x: clip; }
+    body { line-height: 1.5; }
+    main { padding-bottom: 1.25rem; }
+    header { background: rgba(255,255,255,.97) !important; border-color: #cbd5e1 !important; box-shadow: 0 2px 10px rgba(15,23,42,.06); }
+    header .max-w-5xl { max-width: 78rem; }
+    header h1 { color: #0f172a !important; font-weight: 800; }
+    header p, header .text-slate-400, header .text-slate-500 { color: #475569 !important; }
+    main .glass-card { border: 1px solid #cbd5e1 !important; box-shadow: 0 2px 7px rgba(15,23,42,.045); }
+    main .glass-card:hover { box-shadow: 0 5px 16px rgba(15,23,42,.075); }
+    label, main h2, main h3 { color: #1e293b; }
+    main .text-slate-400, main .text-slate-500 { color: #475569 !important; }
+    main .text-slate-300 { color: #334155 !important; }
+    main .text-slate-200 { color: #1e293b !important; }
+    input[type="number"], input[type="text"], input[type="search"], select, textarea {
+      width: 100%; max-width: 100%; min-height: 56px; border: 1.5px solid #94a3b8 !important;
+      border-radius: .8rem; padding: .8rem .9rem; background: #fff !important; color: #0f172a !important;
+      font-size: 1.05rem; font-weight: 650; line-height: 1.35; box-shadow: 0 1px 2px rgba(15,23,42,.04);
+    }
+    input::placeholder, textarea::placeholder { color: #64748b !important; opacity: 1; font-weight: 400; }
+    input:focus, select:focus, textarea:focus { outline: 3px solid rgba(3,105,161,.22) !important; outline-offset: 1px; border-color: #0369a1 !important; }
+    input:disabled, select:disabled { opacity: 1; background: #e2e8f0 !important; color: #475569 !important; }
+    button { min-height: 46px; line-height: 1.35; }
+    button:disabled { cursor: not-allowed; filter: grayscale(.25); }
+    #btnCalculate { min-height: 62px; font-size: 1.05rem; letter-spacing: .015em; background: #b45309 !important; border-color: #92400e !important; }
+    #btnCalculate:hover { background: #92400e !important; }
+    #btnCalculate:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid #0369a1 !important; outline-offset: 3px; }
+    #dispCuttingPoint, #dispResult, #dispRemaining, #dispMeterCheck { font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+    #dispCuttingPoint { color: #92400e !important; }
+    #dispResult { color: #047857 !important; }
+    #dispRemaining { color: #854d0e !important; }
+    #statusBanner { gap: .85rem; }
+    #statusTitle { color: #0f172a !important; }
+    #statusDescription { color: #475569 !important; line-height: 1.55; }
+    #barRemaining { border-radius: 999px; overflow: hidden; }
+    #historyModal, #detailModal { padding: max(.75rem, env(safe-area-inset-top)) .65rem max(.75rem, env(safe-area-inset-bottom)); }
+    #historyModal > div, #detailModal > div { max-height: min(88dvh, 900px); overflow: auto; border-radius: 1rem; }
+    #modalHistoryTableBody td, #modalHistoryTableBody th { padding: .7rem .6rem; vertical-align: middle; }
+    #modalHistoryTableBody tr:nth-child(even) { background: #f8fafc; }
+    #toastContainer { z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
+    footer { color: #475569 !important; }
+    footer p { line-height: 1.6; }
+    @media (min-width: 768px) {
+      main { padding-top: 1.5rem !important; }
+      main > .max-w-5xl { gap: 1.25rem; }
+      .glass-card { border-radius: 1.15rem !important; }
+    }
+    @media (max-width: 640px) {
+      body { padding-bottom: calc(6.25rem + env(safe-area-inset-bottom)) !important; }
+      header .max-w-5xl { padding-left: .65rem !important; padding-right: .65rem !important; }
+      main { padding-left: .65rem !important; padding-right: .65rem !important; }
+      main > .max-w-5xl { padding-left: 0 !important; padding-right: 0 !important; }
+      #btnCalculate { position: fixed !important; left: .65rem; right: .65rem; bottom: calc(.55rem + env(safe-area-inset-bottom)); width: calc(100% - 1.3rem) !important; z-index: 50; box-shadow: 0 8px 24px rgba(146,64,14,.25) !important; }
+      #statusBanner { align-items: stretch; }
+      #dispCuttingPoint, #dispResult, #dispRemaining { font-size: clamp(1.65rem, 8vw, 2.2rem) !important; }
+      #historyModal > div, #detailModal > div { width: 100%; max-width: 100%; }
+      #modalHistoryTableBody { font-size: .78rem; }
+      .language-menu { top: calc(env(safe-area-inset-top) + 4rem) !important; }
+    }
+    @media (max-width: 360px) {
+      header h1 { font-size: .75rem !important; }
+      #languageToggle { padding-left: .45rem !important; padding-right: .45rem !important; }
+      #languageToggleLabel { font-size: .72rem !important; }
+      .grid.grid-cols-3 { gap: .35rem !important; }
+      .grid.grid-cols-3 button { padding-left: .25rem !important; padding-right: .25rem !important; font-size: .68rem !important; }
+    }
+    @media (orientation: landscape) and (max-height: 520px) and (max-width: 900px) {
+      body { padding-bottom: 1rem !important; }
+      #btnCalculate { position: static !important; width: 100% !important; }
+      header { position: relative !important; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
 
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950 pb-8 antialiased">
@@ -1593,83 +1755,83 @@
   const dictionaries = {
     my: {
       "CORD CALCULATOR":"ကြိုးအရှည်တွက်စက်",
-      "Cut Sequencer & Meter Verification":"ဖြတ်တောက်မှုအစီအစဉ်နှင့် မီတာစစ်ဆေးခြင်း",
-      "Ready for Field Use":"လုပ်ငန်းခွင်တွင် အသုံးပြုရန် အသင့်",
-      "Cut Parameters":"ဖြတ်တောက်မှု သတ်မှတ်ချက်များ",
-      "Starting Reel Mark":"ကြိုးလိပ် စတင်အမှတ်",
-      "Initial Cord Value":"ကြိုး၏ မူလအရှည်",
-      "Target End Mark":"အဆုံးသတ် ပစ်မှတ်အမှတ်",
-      "Target Cord Value":"ကြိုးအဆုံး ပစ်မှတ်တန်ဖိုး",
-      "Extra Meter / Safety Slack":"အပိုမီတာ / ဘေးကင်းရေးအပို",
-      "Quick Slack Presets":"အပိုအရှည် အမြန်ရွေးချယ်ရန်",
-      "Calculate Cut":"ဖြတ်တောက်မှု တွက်ချက်ရန်",
-      "CALCULATE CUT":"ဖြတ်တောက်မှု တွက်ချက်ရန်",
-      "Next Cut":"နောက်တစ်ကြိမ် ဖြတ်ရန်",
-      "Reset":"ပြန်လည်သတ်မှတ်ရန်",
+      "Cut Sequencer & Meter Verification":"ဖြတ်မယ့်အရှည်တွက်ချက်ခြင်းနဲ့ မီတာစစ်ဆေးခြင်း",
+      "Ready for Field Use":"လုပ်ငန်းခွင်မှာ သုံးဖို့ အသင့်",
+      "Cut Parameters":"ဖြတ်ဖို့ အချက်အလက်များ",
+      "Starting Reel Mark":"ကြိုးလိပ်ပေါ်က စတင်အမှတ်",
+      "Initial Cord Value":"စတင်ကြိုးအရှည်",
+      "Target End Mark":"အဆုံးထားချင်တဲ့ အမှတ်",
+      "Target Cord Value":"လိုချင်တဲ့ ကြိုးအရှည်",
+      "Extra Meter / Safety Slack":"အပိုအရှည် / အရန်အရှည်",
+      "Quick Slack Presets":"အပိုအရှည်ကို အမြန်ရွေးရန်",
+      "Calculate Cut":"ဖြတ်မယ့်အရှည် တွက်မယ်",
+      "CALCULATE CUT":"ဖြတ်မယ့်အရှည် တွက်မယ်",
+      "Next Cut":"နောက်တစ်ခါ ဖြတ်မယ်",
+      "Reset":"ပြန်စမယ်",
       "History":"မှတ်တမ်း",
-      "Meter Check Verification":"မီတာ စစ်ဆေးအတည်ပြုမှု",
-      "Cutting Point":"ဖြတ်တောက်မည့် အမှတ်",
-      "Remaining Cord":"ကျန်ရှိသော ကြိုး",
-      "Length Left on Reel":"မူလမ้วนတွင် ကျန်ရှိသော ကြိုးအရှည်",
-      "Updates After Each Cut":"ဖြတ်တိုင်း အလိုအလျောက် ပြောင်းလဲမည်",
-      "Remaining cord available for the next cut. The starting length is entered only once.":"နောက်တစ်ကြိမ် ဖြတ်ရန် ကျန်ရှိသော ကြိုးအရှည်။ စတင်အရှည်ကို တစ်ကြိမ်သာ ထည့်ပါ။",
-      "Remaining =":"ကျန်ရှိသည် =",
+      "Meter Check Verification":"မီတာတိုင်းတာမှု စစ်ဆေးချက်",
+      "Cutting Point":"ဖြတ်ရမယ့်နေရာ",
+      "Remaining Cord":"ကျန်တဲ့ကြိုးအရှည်",
+      "Length Left on Reel":"ကြိုးလိပ်မှာ ကျန်တဲ့အရှည်",
+      "Updates After Each Cut":"တစ်ခါဖြတ်တိုင်း အလိုအလျောက် ပြောင်းမယ်",
+      "Remaining cord available for the next cut. The starting length is entered only once.":"နောက်တစ်ခါ ဖြတ်ဖို့ ကျန်နေတဲ့ကြိုးအရှည်ပါ။ စတင်ကြိုးအရှည်ကို တစ်ခါပဲ ထည့်ရပါမယ်။",
+      "Remaining =":"ကျန်တာ =",
       "Result":"ရလဒ်",
-      "PASS":"အောင်မြင်",
-      "FAIL":"မအောင်မြင်",
-      "STANDBY / READY":"အသင့် / စတင်ရန် အသင့်",
-      "NO CALCULATIONS YET":"တွက်ချက်မှု မရှိသေးပါ",
-      "Editable (First Cut)":"ပြင်ဆင်နိုင်သည် (ပထမအကြိမ်)",
-      "Unlock":"သော့ဖွင့်ရန်",
+      "PASS":"မှန်ပါတယ်",
+      "FAIL":"မမှန်ပါဘူး",
+      "STANDBY / READY":"အဆင်သင့်ပါပြီ",
+      "NO CALCULATIONS YET":"မတွက်ရသေးပါဘူး",
+      "Editable (First Cut)":"ပထမအကြိမ်မှာ ပြင်လို့ရပါတယ်",
+      "Unlock":"ဖွင့်မယ်",
       "METER":"မီတာ",
-      "Saved Cuts":"သိမ်းဆည်းထားသော ဖြတ်တောက်မှုများ",
+      "Saved Cuts":"သိမ်းထားတဲ့ ဖြတ်တောက်မှုမှတ်တမ်း",
       "Export CSV":"CSV ထုတ်ယူရန်",
       "Close":"ပိတ်ရန်",
-      "Cancel":"မလုပ်တော့ပါ",
-      "Save":"သိမ်းဆည်းရန်",
-      "View details":"အသေးစိတ်ကြည့်ရန်",
-      "No cuts saved yet. Calculations will automatically record here.":"ဖြတ်တောက်မှု မှတ်တမ်းမရှိသေးပါ။ တွက်ချက်မှုများကို ဤနေရာတွင် အလိုအလျောက် သိမ်းဆည်းပါမည်။",
-      "Enter initial parameters below and click":"အောက်ပါအချက်အလက်များကို ဖြည့်ပြီး နှိပ်ပါ",
+      "Cancel":"မလုပ်တော့ဘူး",
+      "Save":"သိမ်းမယ်",
+      "View details":"အသေးစိတ်ကြည့်မယ်",
+      "No cuts saved yet. Calculations will automatically record here.":"ဖြတ်ထားတဲ့မှတ်တမ်း မရှိသေးပါဘူး။ တွက်ချက်လိုက်တာတွေကို ဒီမှာ အလိုအလျောက် သိမ်းပေးပါမယ်။",
+      "Enter initial parameters below and click":"အောက်ပါအချက်အလက်တွေကို ဖြည့်ပြီး နှိပ်ပါ",
       "OFFLINE PWA":"အော့ဖ်လိုင်း အသုံးပြုနိုင်သည်"
     },
     th: {
       "CORD CALCULATOR":"เครื่องคำนวณความยาวสาย",
-      "Cut Sequencer & Meter Verification":"ลำดับการตัดและตรวจสอบระยะเมตร",
-      "Ready for Field Use":"พร้อมใช้งานหน้างาน",
-      "Cut Parameters":"ค่าการตัด",
-      "Starting Reel Mark":"ตำแหน่งเริ่มต้นของม้วนสาย",
-      "Initial Cord Value":"ความยาวสายเริ่มต้น",
-      "Target End Mark":"ตำแหน่งปลายทางเป้าหมาย",
-      "Target Cord Value":"ค่าความยาวปลายทาง",
-      "Extra Meter / Safety Slack":"ระยะเผื่อ / ระยะปลอดภัย",
-      "Quick Slack Presets":"เลือกระยะเผื่อด่วน",
-      "Calculate Cut":"คำนวณจุดตัด",
-      "CALCULATE CUT":"คำนวณจุดตัด",
-      "Next Cut":"ตัดครั้งถัดไป",
+      "Cut Sequencer & Meter Verification":"คำนวณจุดตัดและเช็กระยะเมตร",
+      "Ready for Field Use":"พร้อมใช้หน้างาน",
+      "Cut Parameters":"ข้อมูลสำหรับตัดสาย",
+      "Starting Reel Mark":"จุดเริ่มต้นบนม้วนสาย",
+      "Initial Cord Value":"ความยาวสายตอนเริ่มต้น",
+      "Target End Mark":"จุดปลายทางที่ต้องการ",
+      "Target Cord Value":"ความยาวสายที่ต้องการ",
+      "Extra Meter / Safety Slack":"ความยาวเผื่อ / ระยะเผื่อไว้",
+      "Quick Slack Presets":"เลือกระยะเผื่อแบบเร็ว",
+      "Calculate Cut":"คำนวณจุดที่ต้องตัด",
+      "CALCULATE CUT":"คำนวณจุดที่ต้องตัด",
+      "Next Cut":"ตัดเส้นถัดไป",
       "Reset":"รีเซ็ต",
       "History":"ประวัติ",
-      "Meter Check Verification":"ตรวจสอบระยะเมตร",
-      "Cutting Point":"จุดตัด",
-      "Remaining Cord":"สายที่เหลือ",
-      "Length Left on Reel":"ความยาวสายที่เหลือบนม้วน",
-      "Updates After Each Cut":"อัปเดตหลังการตัดแต่ละครั้ง",
-      "Remaining cord available for the next cut. The starting length is entered only once.":"ความยาวสายที่เหลือสำหรับการตัดครั้งถัดไป ป้อนความยาวเริ่มต้นเพียงครั้งเดียว",
+      "Meter Check Verification":"เช็กระยะเมตร",
+      "Cutting Point":"จุดที่ต้องตัด",
+      "Remaining Cord":"ความยาวสายที่เหลือ",
+      "Length Left on Reel":"สายที่เหลืออยู่บนม้วน",
+      "Updates After Each Cut":"อัปเดตให้ทุกครั้งที่ตัด",
+      "Remaining cord available for the next cut. The starting length is entered only once.":"นี่คือความยาวสายที่เหลือสำหรับตัดครั้งต่อไป ใส่ความยาวเริ่มต้นแค่ครั้งเดียวก็พอ",
       "Remaining =":"เหลือ =",
       "Result":"ผลลัพธ์",
       "PASS":"ผ่าน",
       "FAIL":"ไม่ผ่าน",
-      "STANDBY / READY":"รอ / พร้อมใช้งาน",
-      "NO CALCULATIONS YET":"ยังไม่มีการคำนวณ",
-      "Editable (First Cut)":"แก้ไขได้ (การตัดครั้งแรก)",
+      "STANDBY / READY":"พร้อมใช้งาน",
+      "NO CALCULATIONS YET":"ยังไม่ได้คำนวณ",
+      "Editable (First Cut)":"แก้ไขได้ตอนตัดครั้งแรก",
       "Unlock":"ปลดล็อก",
       "METER":"เมตร",
-      "Saved Cuts":"รายการตัดที่บันทึกไว้",
-      "Export CSV":"ส่งออก CSV",
+      "Saved Cuts":"ประวัติการตัดที่บันทึกไว้",
+      "Export CSV":"ดาวน์โหลดไฟล์ CSV",
       "Close":"ปิด",
       "Cancel":"ยกเลิก",
       "Save":"บันทึก",
-      "View details":"ดูรายละเอียด",
-      "No cuts saved yet. Calculations will automatically record here.":"ยังไม่มีรายการตัด ระบบจะบันทึกผลการคำนวณไว้ที่นี่โดยอัตโนมัติ",
+      "View details":"ดูข้อมูลเพิ่มเติม",
+      "No cuts saved yet. Calculations will automatically record here.":"ยังไม่มีประวัติการตัด ผลคำนวณจะถูกบันทึกไว้ที่นี่โดยอัตโนมัติ",
       "Enter initial parameters below and click":"กรอกข้อมูลด้านล่างแล้วกด",
       "OFFLINE PWA":"ใช้งานออฟไลน์ได้"
     }

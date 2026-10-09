@@ -1,0 +1,13 @@
+{
+  "name": "Cord Calculator",
+  "short_name": "Cord Calc",
+  "description": "Daylight-first cord cut calculator, sequencer and meter verification tool.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f3f5f7",
+  "theme_color": "#f6f7f9",
+  "lang": "en",
+  "categories": ["utilities", "productivity"]
+}

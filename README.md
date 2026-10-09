@@ -62,3 +62,10 @@ The interface includes responsive layouts for phones, tablets, desktop, and shor
 The latest daylight-first interface uses stronger text contrast, larger number inputs, clearer focus states, a more visible Calculate button, improved history modal sizing, better small-screen spacing, and landscape handling. The app keeps English, Myanmar, and Thai options, saved history, remaining-length tracking, and the existing calculation logic.
 
 The service-worker cache was versioned so browsers can pick up the updated app shell. After deployment, refresh the app once while online.
+
+
+## Optional total cord length tracking
+- You can enter the original total cord length once before the first cut.
+- Saving it locks the value and stores it in this browser/site. The app does not offer an edit or remove control.
+- If you leave it blank when making the first cut, total-length tracking is skipped and no total-available-meters card is shown.
+- Resetting the calculator does not clear the saved total length.

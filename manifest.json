@@ -1,7 +1,7 @@
 {
-  "name": "Cord Calculator",
-  "short_name": "Cord Calc",
-  "description": "Daylight-first cord cut calculator, sequencer and meter verification tool.",
+  "name": "Simple Cord Length Calculator — Developed by จาตูไหม่",
+  "short_name": "Cord Length",
+  "description": "Simple cord length and cut tracking calculator with saved entries and offline support. Developed by จาตูไหม่.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -9,5 +9,8 @@
   "background_color": "#f3f5f7",
   "theme_color": "#f6f7f9",
   "lang": "en",
-  "categories": ["utilities", "productivity"]
+  "categories": [
+    "utilities",
+    "productivity"
+  ]
 }

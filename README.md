@@ -1,90 +1,53 @@
-# Cord Calculator
+# Simple Cord Length Calculator
 
-A daylight-first, mobile-friendly **Cord Calculator & Cut Sequencer** for field use.
-
-Calculate cutting points, verify meter differences, sequence multiple cuts, save calculation history locally, and export the cut log as CSV.
+A mobile-first cord length calculator with sequential cut tracking and local data persistence. Developed by **จาตูไหม่**.
 
 ## Features
 
-- Starting reel mark and target end mark inputs
-- Extra meter / safety slack calculation
-- Quick slack presets
-- Automatic cut calculation
-- Meter-check verification with PASS / FAIL status
-- Sequential cut workflow
-- Local calculation history
-- Detail view for saved cuts
-- CSV export
-- Reset and next-cut controls
-- Responsive mobile layout
-- Daylight-optimized high-contrast UI
-- Offline-ready PWA behavior
-- LocalStorage data persistence
-- Online/offline status indicator
-
-## Calculation
-
-The calculator uses the following core relationship:
-
-```text
-Cutting Point = Target End Mark − Extra / Safety Slack
-
-Result = Starting Reel Mark − Cutting Point
-
-Meter Check = Target End Mark − Cutting Point
-```
-
-A calculation passes when the meter check matches the requested extra/safety value and the calculated values are valid.
+- Simple, mobile-friendly interface with large touch targets
+- English, Myanmar, and Thai language selector
+- Enter starting cord length once and track the remaining length after each cut
+- Automatically save entries and calculation history on the device using browser storage
+- Cut calculation, meter verification, quick slack presets, and CSV history export
+- PWA install metadata and service-worker caching for offline app-shell access
+- GitHub Pages deployment workflow included
 
 ## Run locally
 
-Because this is a browser PWA, use a local HTTP server rather than opening the HTML file directly.
-
-### Python
+Use an HTTP server instead of opening `index.html` directly:
 
 ```bash
 python -m http.server 8080
 ```
 
-Then open:
+Then visit `http://localhost:8080`.
 
-```text
-http://localhost:8080
-```
+## Deploy to GitHub Pages
 
-## GitHub Pages
+1. Extract the ZIP and upload all project files to a GitHub repository.
+2. Commit to the `main` branch.
+3. In **Settings → Pages**, choose **GitHub Actions** as the build/deployment source.
+4. The included workflow deploys on each push to `main`.
 
-1. Create a new GitHub repository.
-2. Upload the contents of this folder.
-3. Commit the files to the `main` branch.
-4. Open **Settings → Pages**.
-5. Under **Build and deployment**, choose **GitHub Actions**.
-6. GitHub will use the workflow in `.github/workflows/deploy.yml`.
-7. After deployment, open the Pages URL shown by GitHub.
+## Saved data
 
-## PWA / Offline Use
+Entries and history are saved locally in the same browser/app storage on this device. They should remain after closing and reopening the app, but clearing site data, changing browsers, or uninstalling/clearing app data may erase them. Local storage is not cloud-synced.
 
-The application includes PWA metadata and service-worker support. Once served over HTTPS and loaded successfully, supported browsers can install it as an app and cache the application for offline field use.
+## Offline note
 
-## Project Structure
+Open the app once while online so the service worker can cache the app shell. The current HTML still references Tailwind CSS, Font Awesome, and Google Fonts via external CDNs, so a first online load is needed for those assets and they may be unavailable offline unless previously cached. For a fully self-contained offline build, these dependencies should be bundled locally or replaced with local CSS/icons/fonts.
 
-```text
-cord-calculator/
-├── index.html
-├── manifest.json
-├── service-worker.js
-├── README.md
-├── LICENSE
-├── .gitignore
-└── .github/
-    └── workflows/
-        └── deploy.yml
-```
+## Project files
 
-## Data & Privacy
-
-Calculation history is stored locally in the browser using `localStorage`. No server-side database is required for the calculator's normal operation.
+- `index.html`
+- `manifest.json`
+- `service-worker.js`
+- `README.md`
+- `LICENSE`
+- `.gitignore`
+- `run-local.bat`
+- `.github/workflows/deploy.yml`
 
 ## License
 
-MIT License.
+MIT.

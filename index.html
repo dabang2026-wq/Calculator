@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Cord Calculator — Cut Sequencer & Meter Verification</title>
+  <title>Simple Cord Length Calculator — Developed by จาตูไหม่</title>
   
   <!-- PWA & Mobile Meta Tags -->
   <meta name="theme-color" content="#f6f7f9" />
-  <meta name="description" content="Minimalist Cord Calculator, Meter Verification and Cut Sequencer for cable field technicians." />
+  <meta name="description" content="Simple Cord Length Calculator with saved entries, cut tracking, and remaining cord length. Developed by จาตูไหม่." />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Cord Calc" />
@@ -461,6 +461,100 @@
     }
   </style>
 
+
+<style id="mobile-bilingual-enhancements">
+  :root { --touch-target: 46px; }
+  body { -webkit-tap-highlight-color: transparent; }
+  button, input, select, textarea { touch-action: manipulation; }
+  button { min-height: var(--touch-target); }
+  input[type="number"] { min-height: 56px; font-size: 1.15rem; }
+  #languageToggle { flex: 0 0 auto; white-space: nowrap; }
+  #languageToggleLabel { font-size: .8rem; }
+  @media (max-width: 480px) {
+    header .max-w-5xl { padding-left: .65rem; padding-right: .65rem; }
+    header .max-w-5xl > div { gap: .5rem; }
+    header h1 { font-size: .78rem; }
+    header .max-w-5xl > div > div:first-child { gap: .5rem; min-width: 0; }
+    header .max-w-5xl > div > div:first-child > div:last-child { min-width: 0; }
+    header .max-w-5xl > div > div:last-child { gap: .35rem; }
+    header button { padding-left: .6rem; padding-right: .6rem; }
+    main, main > .max-w-5xl { padding-left: .75rem; padding-right: .75rem; }
+    .glass-card { border-radius: 1rem; }
+    #btnCalculate, button[onclick="calculateCut()"] { position: sticky; bottom: .5rem; z-index: 20; box-shadow: 0 8px 24px rgba(146, 64, 14, .22); }
+  }
+  :focus-visible { outline: 3px solid #0369a1 !important; outline-offset: 3px; }
+  html[lang="my"] body { font-family: "Noto Sans Myanmar", "Myanmar Text", system-ui, sans-serif; }
+  html[lang="my"] input, html[lang="my"] button, html[lang="my"] label { line-height: 1.6; }
+</style>
+
+
+<style id="trilingual-mobile-polish">
+  .language-picker { position: relative; flex: 0 0 auto; }
+  .language-menu { position: absolute; top: calc(100% + .45rem); right: 0; z-index: 80; min-width: 150px; padding: .35rem; border: 1px solid #cbd5e1; border-radius: .9rem; background: #fff; box-shadow: 0 14px 32px rgba(15,23,42,.18); }
+  .language-menu[hidden] { display: none !important; }
+  .language-menu button { display: flex; align-items: center; width: 100%; min-height: 44px; padding: .65rem .75rem; border-radius: .6rem; color: #0f172a; text-align: left; background: #fff; }
+  .language-menu button:hover, .language-menu button[aria-pressed="true"] { background: #fef3c7; }
+  html[lang="th"] body { font-family: "Noto Sans Thai", system-ui, sans-serif; }
+  html[lang="my"] body { font-family: "Noto Sans Myanmar", "Myanmar Text", system-ui, sans-serif; }
+  html[lang="th"] button, html[lang="th"] label, html[lang="my"] button, html[lang="my"] label { line-height: 1.65; }
+  @media (max-width: 480px) {
+    .language-menu { position: fixed; top: 4.5rem; right: .65rem; min-width: 170px; }
+    header .max-w-5xl > div { gap: .35rem; }
+    header .max-w-5xl > div > div:last-child { gap: .25rem; }
+    header button { min-height: 44px; }
+    main, main > .max-w-5xl { padding-left: .65rem; padding-right: .65rem; }
+    input[type="number"] { min-height: 58px; font-size: 1.2rem; }
+  }
+</style>
+
+
+<style id="simple-mobile-ux-branding">
+  :root { --app-amber: #b45309; --app-ink: #0f172a; --app-muted: #475569; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+  button, input, select, textarea { font: inherit; }
+  button { cursor: pointer; -webkit-touch-callout: none; }
+  input, select, textarea { max-width: 100%; }
+  input:focus, select:focus, textarea:focus { border-color: #d97706 !important; box-shadow: 0 0 0 3px rgba(217,119,6,.16); outline: none; }
+  header { padding-top: env(safe-area-inset-top); }
+  header h1 { letter-spacing: -.025em; }
+  header .max-w-5xl > div { min-width: 0; }
+  header .max-w-5xl > div > div:first-child { min-width: 0; }
+  header h1 { overflow-wrap: anywhere; }
+  .glass-card { overflow-wrap: anywhere; }
+  #btnCalculate { min-height: 58px; border-radius: 1rem; font-weight: 800; }
+  #dispCuttingPoint, #dispResult { font-variant-numeric: tabular-nums; }
+  @media (max-width: 600px) {
+    body { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)) !important; }
+    header { position: sticky; top: 0; }
+    header .max-w-5xl { padding: .55rem .7rem !important; }
+    header .max-w-5xl > div { align-items: center; gap: .4rem !important; }
+    header .max-w-5xl > div > div:first-child { gap: .5rem !important; flex: 1 1 auto; }
+    header .max-w-5xl > div > div:first-child > div:first-child { width: 2.35rem; height: 2.35rem; flex: 0 0 2.35rem; }
+    header h1 { display: block !important; font-size: .76rem !important; line-height: 1.25 !important; }
+    header h1 span { display: none !important; }
+    header p { font-size: .68rem !important; margin-top: .15rem; }
+    header .max-w-5xl > div > div:last-child { gap: .25rem !important; flex: 0 0 auto; }
+    header .max-w-5xl > div > div:last-child > button,
+    #languageToggle { min-height: 42px; padding-left: .55rem !important; padding-right: .55rem !important; }
+    main, main > .max-w-5xl { padding-left: .7rem !important; padding-right: .7rem !important; }
+    main { padding-top: .65rem !important; gap: .8rem !important; }
+    .glass-card { border-radius: 1rem !important; padding: 1rem !important; }
+    input[type="number"], input[type="text"], select { min-height: 54px; font-size: 16px !important; }
+    button { min-height: 44px; }
+    #btnCalculate, button[onclick="calculateCut()"] { position: fixed !important; left: .7rem; right: .7rem; bottom: calc(.55rem + env(safe-area-inset-bottom)); width: calc(100% - 1.4rem); z-index: 45; box-shadow: 0 8px 24px rgba(146,64,14,.28); }
+    #toastContainer { bottom: calc(4.9rem + env(safe-area-inset-bottom)) !important; }
+    table { min-width: 100%; }
+    .overflow-x-auto { -webkit-overflow-scrolling: touch; }
+  }
+  @media (max-width: 360px) {
+    header h1 { font-size: .69rem !important; }
+    header .max-w-5xl > div > div:last-child { gap: .15rem !important; }
+    #languageToggleLabel { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950 pb-8 antialiased">
 
@@ -473,10 +567,10 @@
         </div>
         <div>
           <h1 class="font-extrabold text-sm sm:text-base text-white leading-tight tracking-tight flex items-center gap-2">
-            CORD CALCULATOR
-            <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">OFFLINE PWA</span>
+            SIMPLE CORD LENGTH CALCULATOR
+            <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">OFFLINE</span>
           </h1>
-          <p class="text-[11px] text-slate-400 font-mono">Cut Sequencer & Meter Verification</p>
+          <p class="text-[11px] text-slate-400 leading-snug">Developed by <strong class="font-semibold text-amber-700">จาตูไหม่</strong></p>
         </div>
       </div>
 
@@ -497,6 +591,18 @@
         <span id="networkBadge" class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950/80 border border-emerald-800/80 text-emerald-400 text-[11px] font-mono">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Ready for Field Use
         </span>
+
+        <!-- Language toggle: English / Myanmar -->
+        <div class="language-picker">
+          <button id="languageToggle" type="button" aria-label="Choose language" aria-expanded="false" aria-controls="languageMenu" onclick="document.getElementById('languageMenu').hidden = !document.getElementById('languageMenu').hidden; this.setAttribute('aria-expanded', String(!document.getElementById('languageMenu').hidden))" class="min-h-11 px-3 py-2 rounded-xl bg-white border border-slate-300 text-slate-800 font-bold text-xs shadow-sm btn-smooth flex items-center gap-2">
+            <span aria-hidden="true">🌐</span><span id="languageToggleLabel">English</span><span aria-hidden="true">▾</span>
+          </button>
+          <div id="languageMenu" class="language-menu" role="group" aria-label="Language selection" hidden>
+            <button type="button" data-lang-option="en" onclick="setCordLanguage('en'); document.getElementById('languageMenu').hidden=true; document.getElementById('languageToggle').setAttribute('aria-expanded','false')">🇬🇧 English</button>
+            <button type="button" data-lang-option="my" onclick="setCordLanguage('my'); document.getElementById('languageMenu').hidden=true; document.getElementById('languageToggle').setAttribute('aria-expanded','false')">🇲🇲 မြန်မာ</button>
+            <button type="button" data-lang-option="th" onclick="setCordLanguage('th'); document.getElementById('languageMenu').hidden=true; document.getElementById('languageToggle').setAttribute('aria-expanded','false')">🇹🇭 ไทย</button>
+          </div>
+        </div>
 
         <!-- History Button Header -->
         <button onclick="openHistoryModal()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-amber-300 font-semibold text-xs btn-smooth flex items-center gap-2 shadow-sm">
@@ -681,6 +787,22 @@
           </div>
         </div>
 
+        <!-- REMAINING CORD LENGTH CARD -->
+        <div class="glass-card rounded-2xl p-5 border border-amber-500/30 bg-amber-500/5 flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute -right-3 -bottom-3 text-amber-800/10 text-8xl font-black pointer-events-none font-mono selection:bg-transparent">3</div>
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-bold text-amber-200 uppercase tracking-wider font-sans">Length Left on Reel</span>
+              <span class="text-[10px] font-mono text-amber-300 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">Updates After Each Cut</span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-1">Remaining cord available for the next cut. The starting length is entered only once.</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-amber-500/20 flex items-baseline justify-between font-mono">
+            <span class="text-xs text-slate-400 font-sans">Remaining =</span>
+            <div id="dispRemaining" aria-live="polite" class="text-3xl font-black text-amber-300">-- <span class="text-base font-normal text-slate-500">m</span></div>
+          </div>
+        </div>
+
         <!-- VISUAL DIAGRAM REPRESENTATION -->
         <div class="glass-card rounded-2xl p-5 border border-slate-800/80 space-y-3">
           <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block font-sans">Visual Segment Breakdown</span>
@@ -845,6 +967,14 @@
     // Initialize application state & register Service Worker
     window.addEventListener('DOMContentLoaded', () => {
       loadLocalStorageData();
+      restoreCalculatorDraft();
+      ['initialCord', 'targetCord', 'extraMeter'].forEach((id) => {
+        const field = document.getElementById(id);
+        if (field) {
+          field.addEventListener('input', saveCalculatorDraft);
+          field.addEventListener('change', saveCalculatorDraft);
+        }
+      });
       checkNetworkStatus();
       registerOfflineServiceWorker();
 
@@ -893,6 +1023,65 @@
         }
       } catch (e) {
         console.warn('Error loading localStorage data:', e);
+      }
+    }
+
+    // Persist unfinished input and the active cut sequence on this device.
+    // localStorage survives closing/reopening the app and browser restarts.
+    function saveCalculatorDraft() {
+      try {
+        localStorage.setItem('cord_calc_draft', JSON.stringify({
+          initialCord: document.getElementById('initialCord')?.value ?? '',
+          targetCord: document.getElementById('targetCord')?.value ?? '',
+          extraMeter: document.getElementById('extraMeter')?.value ?? '15',
+          sequenceIndex,
+          initialCordLocked,
+          currentCalculation
+        }));
+      } catch (e) {
+        console.warn('Could not save calculator draft:', e);
+      }
+    }
+
+    function restoreCalculatorDraft() {
+      try {
+        const raw = localStorage.getItem('cord_calc_draft');
+        if (!raw) return;
+        const draft = JSON.parse(raw);
+        const initialInput = document.getElementById('initialCord');
+        const targetInput = document.getElementById('targetCord');
+        const extraInput = document.getElementById('extraMeter');
+        if (draft.initialCord !== undefined) initialInput.value = draft.initialCord;
+        if (draft.targetCord !== undefined) targetInput.value = draft.targetCord;
+        if (draft.extraMeter !== undefined) extraInput.value = draft.extraMeter;
+        sequenceIndex = Number(draft.sequenceIndex) > 0 ? Number(draft.sequenceIndex) : 1;
+        document.getElementById('seqBadge').textContent = `Cut #${sequenceIndex} in Sequence`;
+        currentCalculation = draft.currentCalculation || null;
+        initialCordLocked = Boolean(draft.initialCordLocked);
+        initialInput.disabled = initialCordLocked;
+        const lockBadge = document.getElementById('lockBadge');
+        if (initialCordLocked) {
+          lockBadge.textContent = 'Locked (Sequence Active)';
+          lockBadge.className = 'text-[10px] font-mono text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/30';
+        } else {
+          lockBadge.textContent = 'Editable (First Cut)';
+          lockBadge.className = 'text-[10px] font-mono text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700/80';
+        }
+        document.getElementById('btnUnlock').classList.add('hidden');
+        if (currentCalculation) {
+          const c = currentCalculation;
+          document.getElementById('dispCuttingPoint').innerHTML = `${c.cuttingPoint} <span class="text-base font-normal text-slate-500">m</span>`;
+          document.getElementById('dispResult').innerHTML = `${c.result} <span class="text-base font-normal text-slate-500">m</span>`;
+          document.getElementById('dispRemaining').innerHTML = `${c.cuttingPoint} <span class="text-base font-normal text-slate-500">m</span>`;
+          document.getElementById('dispMeterCheck').textContent = `${c.meterCheck} m`;
+          document.getElementById('btnSave').disabled = true;
+          document.getElementById('btnNext').disabled = false;
+          updateVisualBar(c.initial, c.result, c.extra);
+          if (c.isValid) updateStatusDisplay('pass', 'GREENLIGHT PASS', `Meter Check (${c.meterCheck}m) matches Safety Slack (${c.extra}m). Cut verified.`);
+          else updateStatusDisplay('fail', 'REDLIGHT FAIL', 'Restored previous cut result. Check the saved values before continuing.');
+        }
+      } catch (e) {
+        console.warn('Could not restore calculator draft:', e);
       }
     }
 
@@ -995,6 +1184,7 @@
       // Screen updates
       document.getElementById('dispCuttingPoint').innerHTML = `${cpRounded} <span class="text-base font-normal text-slate-500">m</span>`;
       document.getElementById('dispResult').innerHTML = `${resRounded} <span class="text-base font-normal text-slate-500">m</span>`;
+      document.getElementById('dispRemaining').innerHTML = `${cpRounded} <span class="text-base font-normal text-slate-500">m</span>`;
       document.getElementById('dispMeterCheck').textContent = `${mcRounded} m`;
 
       lockInitialInput();
@@ -1099,7 +1289,7 @@
       badge.textContent = 'Locked (Sequence Active)';
       badge.className = 'text-[10px] font-mono text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/30';
 
-      document.getElementById('btnUnlock').classList.remove('hidden');
+      document.getElementById('btnUnlock').classList.add('hidden');
     }
 
     function unlockInitialInput() {
@@ -1133,6 +1323,7 @@
 
       document.getElementById('dispCuttingPoint').innerHTML = `-- <span class="text-base font-normal text-slate-500">m</span>`;
       document.getElementById('dispResult').innerHTML = `-- <span class="text-base font-normal text-slate-500">m</span>`;
+      document.getElementById('dispRemaining').innerHTML = `${nextInitial} <span class="text-base font-normal text-slate-500">m</span>`;
       document.getElementById('dispMeterCheck').textContent = `-- m`;
 
       const banner = document.getElementById('statusBanner');
@@ -1149,12 +1340,17 @@
       document.getElementById('btnNext').disabled = true;
       currentCalculation = null;
 
+      saveCalculatorDraft();
       showToast(`Carried forward ${nextInitial}m to next cut.`, 'info');
     }
 
     function resetCalculator() {
       playSound('click');
-      unlockInitialInput();
+      initialCordLocked = false;
+      document.getElementById('initialCord').disabled = false;
+      document.getElementById('lockBadge').textContent = 'Editable (First Cut)';
+      document.getElementById('lockBadge').className = 'text-[10px] font-mono text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded border border-slate-700/80';
+      document.getElementById('btnUnlock').classList.add('hidden');
 
       document.getElementById('initialCord').value = '';
       document.getElementById('targetCord').value = '';
@@ -1162,6 +1358,7 @@
 
       document.getElementById('dispCuttingPoint').innerHTML = `-- <span class="text-base font-normal text-slate-500">m</span>`;
       document.getElementById('dispResult').innerHTML = `-- <span class="text-base font-normal text-slate-500">m</span>`;
+      document.getElementById('dispRemaining').innerHTML = `-- <span class="text-base font-normal text-slate-500">m</span>`;
       document.getElementById('dispMeterCheck').textContent = `-- m`;
 
       sequenceIndex = 1;
@@ -1182,6 +1379,7 @@
       currentCalculation = null;
 
       updateVisualBar(100, 0, 0);
+      saveCalculatorDraft();
       showToast('Calculator reset to initial state.', 'info');
     }
 
@@ -1382,87 +1580,150 @@
 
     // Comprehensive Service Worker with Stale-While-Revalidate Caching for complete offline functionality
     function registerOfflineServiceWorker() {
-      if ('serviceWorker' in navigator) {
-        const swScript = `
-          const CACHE_NAME = 'cord-calc-offline-v4';
-          const STATIC_ASSETS = [
-            './',
-            'index.html',
-            'https://cdn.tailwindcss.com',
-            'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-            'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap'
-          ];
-
-          self.addEventListener('install', (event) => {
-            event.waitUntil(
-              caches.open(CACHE_NAME).then((cache) => {
-                return Promise.allSettled(
-                  STATIC_ASSETS.map((url) => {
-                    return fetch(url, { mode: 'no-cors' })
-                      .then((response) => cache.put(url, response))
-                      .catch((err) => console.warn('Cache fetch failed for:', url));
-                  })
-                );
-              }).then(() => self.skipWaiting())
-            );
-          });
-
-          self.addEventListener('activate', (event) => {
-            event.waitUntil(
-              caches.keys().then((keys) => {
-                return Promise.all(
-                  keys.map((key) => {
-                    if (key !== CACHE_NAME) return caches.delete(key);
-                  })
-                );
-              }).then(() => self.clients.claim())
-            );
-          });
-
-          self.addEventListener('fetch', (event) => {
-            if (event.request.method !== 'GET') return;
-
-            event.respondWith(
-              caches.match(event.request).then((cachedResponse) => {
-                if (cachedResponse) {
-                  // Stale-While-Revalidate background update
-                  fetch(event.request)
-                    .then((networkResponse) => {
-                      if (networkResponse && networkResponse.status === 200) {
-                        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
-                      }
-                    })
-                    .catch(() => {});
-                  return cachedResponse;
-                }
-
-                return fetch(event.request).then((networkResponse) => {
-                  if (networkResponse && (networkResponse.status === 200 || networkResponse.type === 'opaque')) {
-                    const responseToCache = networkResponse.clone();
-                    caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseToCache));
-                  }
-                  return networkResponse;
-                }).catch(() => {
-                  if (event.request.mode === 'navigate') {
-                    return caches.match('./') || caches.match('index.html');
-                  }
-                });
-              })
-            );
-          });
-        `;
-
-        try {
-          const blob = new Blob([swScript], { type: 'application/javascript' });
-          const swUrl = URL.createObjectURL(blob);
-          navigator.serviceWorker.register(swUrl).catch((err) => {
-            console.warn('SW Blob registration info:', err);
-          });
-        } catch(e) {
-          console.warn('SW initialization error:', e);
-        }
-      }
+      if (!('serviceWorker' in navigator)) return;
+      if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') return;
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(() => console.info('Cord Calculator offline support registered.'))
+        .catch((err) => console.warn('Service worker registration failed:', err));
     }
   </script>
+
+<script id="bilingual-runtime">
+(() => {
+  const dictionaries = {
+    my: {
+      "CORD CALCULATOR":"ကြိုးအရှည်တွက်စက်",
+      "Cut Sequencer & Meter Verification":"ဖြတ်တောက်မှုအစီအစဉ်နှင့် မီတာစစ်ဆေးခြင်း",
+      "Ready for Field Use":"လုပ်ငန်းခွင်တွင် အသုံးပြုရန် အသင့်",
+      "Cut Parameters":"ဖြတ်တောက်မှု သတ်မှတ်ချက်များ",
+      "Starting Reel Mark":"ကြိုးလိပ် စတင်အမှတ်",
+      "Initial Cord Value":"ကြိုး၏ မူလအရှည်",
+      "Target End Mark":"အဆုံးသတ် ပစ်မှတ်အမှတ်",
+      "Target Cord Value":"ကြိုးအဆုံး ပစ်မှတ်တန်ဖိုး",
+      "Extra Meter / Safety Slack":"အပိုမီတာ / ဘေးကင်းရေးအပို",
+      "Quick Slack Presets":"အပိုအရှည် အမြန်ရွေးချယ်ရန်",
+      "Calculate Cut":"ဖြတ်တောက်မှု တွက်ချက်ရန်",
+      "CALCULATE CUT":"ဖြတ်တောက်မှု တွက်ချက်ရန်",
+      "Next Cut":"နောက်တစ်ကြိမ် ဖြတ်ရန်",
+      "Reset":"ပြန်လည်သတ်မှတ်ရန်",
+      "History":"မှတ်တမ်း",
+      "Meter Check Verification":"မီတာ စစ်ဆေးအတည်ပြုမှု",
+      "Cutting Point":"ဖြတ်တောက်မည့် အမှတ်",
+      "Remaining Cord":"ကျန်ရှိသော ကြိုး",
+      "Length Left on Reel":"မူလမ้วนတွင် ကျန်ရှိသော ကြိုးအရှည်",
+      "Updates After Each Cut":"ဖြတ်တိုင်း အလိုအလျောက် ပြောင်းလဲမည်",
+      "Remaining cord available for the next cut. The starting length is entered only once.":"နောက်တစ်ကြိမ် ဖြတ်ရန် ကျန်ရှိသော ကြိုးအရှည်။ စတင်အရှည်ကို တစ်ကြိမ်သာ ထည့်ပါ။",
+      "Remaining =":"ကျန်ရှိသည် =",
+      "Result":"ရလဒ်",
+      "PASS":"အောင်မြင်",
+      "FAIL":"မအောင်မြင်",
+      "STANDBY / READY":"အသင့် / စတင်ရန် အသင့်",
+      "NO CALCULATIONS YET":"တွက်ချက်မှု မရှိသေးပါ",
+      "Editable (First Cut)":"ပြင်ဆင်နိုင်သည် (ပထမအကြိမ်)",
+      "Unlock":"သော့ဖွင့်ရန်",
+      "METER":"မီတာ",
+      "Saved Cuts":"သိမ်းဆည်းထားသော ဖြတ်တောက်မှုများ",
+      "Export CSV":"CSV ထုတ်ယူရန်",
+      "Close":"ပိတ်ရန်",
+      "Cancel":"မလုပ်တော့ပါ",
+      "Save":"သိမ်းဆည်းရန်",
+      "View details":"အသေးစိတ်ကြည့်ရန်",
+      "No cuts saved yet. Calculations will automatically record here.":"ဖြတ်တောက်မှု မှတ်တမ်းမရှိသေးပါ။ တွက်ချက်မှုများကို ဤနေရာတွင် အလိုအလျောက် သိမ်းဆည်းပါမည်။",
+      "Enter initial parameters below and click":"အောက်ပါအချက်အလက်များကို ဖြည့်ပြီး နှိပ်ပါ",
+      "OFFLINE PWA":"အော့ဖ်လိုင်း အသုံးပြုနိုင်သည်"
+    },
+    th: {
+      "CORD CALCULATOR":"เครื่องคำนวณความยาวสาย",
+      "Cut Sequencer & Meter Verification":"ลำดับการตัดและตรวจสอบระยะเมตร",
+      "Ready for Field Use":"พร้อมใช้งานหน้างาน",
+      "Cut Parameters":"ค่าการตัด",
+      "Starting Reel Mark":"ตำแหน่งเริ่มต้นของม้วนสาย",
+      "Initial Cord Value":"ความยาวสายเริ่มต้น",
+      "Target End Mark":"ตำแหน่งปลายทางเป้าหมาย",
+      "Target Cord Value":"ค่าความยาวปลายทาง",
+      "Extra Meter / Safety Slack":"ระยะเผื่อ / ระยะปลอดภัย",
+      "Quick Slack Presets":"เลือกระยะเผื่อด่วน",
+      "Calculate Cut":"คำนวณจุดตัด",
+      "CALCULATE CUT":"คำนวณจุดตัด",
+      "Next Cut":"ตัดครั้งถัดไป",
+      "Reset":"รีเซ็ต",
+      "History":"ประวัติ",
+      "Meter Check Verification":"ตรวจสอบระยะเมตร",
+      "Cutting Point":"จุดตัด",
+      "Remaining Cord":"สายที่เหลือ",
+      "Length Left on Reel":"ความยาวสายที่เหลือบนม้วน",
+      "Updates After Each Cut":"อัปเดตหลังการตัดแต่ละครั้ง",
+      "Remaining cord available for the next cut. The starting length is entered only once.":"ความยาวสายที่เหลือสำหรับการตัดครั้งถัดไป ป้อนความยาวเริ่มต้นเพียงครั้งเดียว",
+      "Remaining =":"เหลือ =",
+      "Result":"ผลลัพธ์",
+      "PASS":"ผ่าน",
+      "FAIL":"ไม่ผ่าน",
+      "STANDBY / READY":"รอ / พร้อมใช้งาน",
+      "NO CALCULATIONS YET":"ยังไม่มีการคำนวณ",
+      "Editable (First Cut)":"แก้ไขได้ (การตัดครั้งแรก)",
+      "Unlock":"ปลดล็อก",
+      "METER":"เมตร",
+      "Saved Cuts":"รายการตัดที่บันทึกไว้",
+      "Export CSV":"ส่งออก CSV",
+      "Close":"ปิด",
+      "Cancel":"ยกเลิก",
+      "Save":"บันทึก",
+      "View details":"ดูรายละเอียด",
+      "No cuts saved yet. Calculations will automatically record here.":"ยังไม่มีรายการตัด ระบบจะบันทึกผลการคำนวณไว้ที่นี่โดยอัตโนมัติ",
+      "Enter initial parameters below and click":"กรอกข้อมูลด้านล่างแล้วกด",
+      "OFFLINE PWA":"ใช้งานออฟไลน์ได้"
+    }
+  };
+
+  const originals = new WeakMap();
+  const ignored = new Set(["SCRIPT","STYLE","NOSCRIPT"]);
+  function walk(root, fn) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        return ignored.has(node.parentElement?.tagName) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(fn);
+  }
+  function applyLanguage(lang) {
+    const dict = dictionaries[lang] || null;
+    document.documentElement.lang = lang === "my" ? "my" : lang;
+    walk(document.body, node => {
+      if (!originals.has(node)) originals.set(node, node.nodeValue);
+      const original = originals.get(node);
+      const key = original.trim();
+      if (!key) return;
+      let output = original;
+      if (dict && dict[key]) output = original.replace(key, dict[key]);
+      if (node.nodeValue !== output) node.nodeValue = output;
+    });
+    const label = document.getElementById("languageToggleLabel");
+    if (label) label.textContent = lang === "my" ? "မြန်မာ" : lang === "th" ? "ไทย" : "English";
+    document.querySelectorAll("[data-lang-option]").forEach(btn => {
+      btn.setAttribute("aria-pressed", String(btn.dataset.langOption === lang));
+    });
+    try { localStorage.setItem("cordCalculatorLanguage", lang); } catch (_) {}
+  }
+  window.setCordLanguage = applyLanguage;
+  window.toggleLanguage = () => {
+    const current = document.documentElement.lang;
+    applyLanguage(current === "en" ? "my" : current === "my" ? "th" : "en");
+  };
+  window.addEventListener("DOMContentLoaded", () => {
+    let lang = "en";
+    try { lang = localStorage.getItem("cordCalculatorLanguage") || "en"; } catch (_) {}
+    applyLanguage(lang);
+  });
+})();
+</script>
+
+
+<footer class="w-full px-4 py-5 text-center text-xs text-slate-500" aria-label="Developer credit">
+  <p class="font-semibold text-slate-600">Simple Cord Length Calculator</p>
+  <p class="mt-1">Developed by <span class="font-bold text-amber-700">จาตูไหม่</span></p>
+  <p class="mt-1 text-[11px]">Your entries are saved on this device.</p>
+</footer>
 </body>
 </html>

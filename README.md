@@ -77,3 +77,9 @@ The service-worker cache was versioned so browsers can pick up the updated app s
 - Kept numeric values aligned with tabular numerals for easier measurement comparison.
 - Reduced card transition work to border and shadow changes instead of animating every property.
 - Updated the service-worker cache version so the new interface can be refreshed after deployment.
+
+
+### Latest usability updates
+- Total cord tracking can now be edited or removed; editing preserves the amount already used where possible. Removing tracking keeps cut history intact.
+- Each history row has its own Remove action in addition to View.
+- Decimal-friendly mobile keypad hints are enabled on all cord measurement inputs, with clearer spacing between action icons and labels.

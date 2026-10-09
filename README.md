@@ -69,3 +69,11 @@ The service-worker cache was versioned so browsers can pick up the updated app s
 - Saving it locks the value and stores it in this browser/site. The app does not offer an edit or remove control.
 - If you leave it blank when making the first cut, total-length tracking is skipped and no total-available-meters card is shown.
 - Resetting the calculator does not clear the saved total length.
+
+
+## Input spacing and performance polish
+- Standardized number and text field padding, minimum height, label line-height, and spacing between form controls.
+- Improved input placeholder contrast and keyboard focus visibility.
+- Kept numeric values aligned with tabular numerals for easier measurement comparison.
+- Reduced card transition work to border and shadow changes instead of animating every property.
+- Updated the service-worker cache version so the new interface can be refreshed after deployment.

@@ -38,7 +38,7 @@
           },
           colors: {
             brand: {
-              50: '#fffbebe',
+              50: '#fffbeb',
               100: '#fef3c7',
               400: '#fbbf24',
               500: '#f59e0b',
@@ -716,6 +716,85 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
+
+
+<style id="input-spacing-performance-v1">
+  /* Consistent form rhythm: readable labels, predictable field padding, less crowding. */
+  .glass-card label {
+    line-height: 1.45;
+  }
+  .glass-card .space-y-1\.5 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: .55rem;
+  }
+  .glass-card .space-y-2 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: .7rem;
+  }
+  .glass-card input[type="number"],
+  .glass-card input[type="text"],
+  .glass-card input[type="search"],
+  .glass-card select,
+  .glass-card textarea {
+    width: 100%;
+    max-width: 100%;
+    border-radius: .8rem;
+    line-height: 1.35;
+    scroll-margin-top: 6rem;
+  }
+  .glass-card input[type="number"] {
+    padding-top: .85rem;
+    padding-bottom: .85rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .glass-card input[type="number"]::placeholder,
+  .glass-card input[type="text"]::placeholder,
+  .glass-card textarea::placeholder {
+    color: #64748b !important;
+    opacity: 1;
+  }
+  .glass-card input[type="number"]:focus-visible,
+  .glass-card input[type="text"]:focus-visible,
+  .glass-card input[type="search"]:focus-visible,
+  .glass-card select:focus-visible,
+  .glass-card textarea:focus-visible {
+    outline: 3px solid rgba(217,119,6,.3) !important;
+    outline-offset: 1px;
+  }
+  /* Avoid expensive animation of every property on field cards. */
+  .glass-card {
+    transition: border-color .18s ease, box-shadow .18s ease;
+  }
+  @media (min-width: 601px) {
+    .glass-card .space-y-5 > :not([hidden]) ~ :not([hidden]) {
+      margin-top: 1.35rem;
+    }
+  }
+  @media (max-width: 600px) {
+    .glass-card label {
+      font-size: .82rem;
+    }
+    .glass-card .space-y-1\.5 > :not([hidden]) ~ :not([hidden]) {
+      margin-top: .6rem;
+    }
+    .glass-card input[type="number"],
+    .glass-card input[type="text"],
+    .glass-card input[type="search"],
+    .glass-card select,
+    .glass-card textarea {
+      min-height: 54px;
+      font-size: 16px !important;
+    }
+    .glass-card .grid.grid-cols-4 {
+      gap: .45rem;
+    }
+    .glass-card .grid.grid-cols-4 button {
+      min-height: 46px;
+      padding-inline: .25rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .glass-card { transition: none !important; }
+  }
+</style>
 
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950 pb-8 antialiased">

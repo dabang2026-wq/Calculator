@@ -83,3 +83,8 @@ The service-worker cache was versioned so browsers can pick up the updated app s
 - Total cord tracking can now be edited or removed; editing preserves the amount already used where possible. Removing tracking keeps cut history intact.
 - Each history row has its own Remove action in addition to View.
 - Decimal-friendly mobile keypad hints are enabled on all cord measurement inputs, with clearer spacing between action icons and labels.
+
+
+### Customizable Quick Slack Presets
+- Quick preset buttons are displayed in one horizontal row with vivid colored icons.
+- Use **Customize** to change all four values; Save presets stores them locally in the same browser/site, and Default restores 14, 15, 18, and 21 meters.

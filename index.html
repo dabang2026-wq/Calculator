@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Simple Cord Length Calculator — Developed by ตูไหม่</title>
+  <title>Simple Cord Length Calculator — Developed by จาตูไหม่</title>
   
   <!-- PWA & Mobile Meta Tags -->
   <meta name="theme-color" content="#ffffff" />
@@ -1077,12 +1077,12 @@
           </div>
         </div>
 
-        <!-- REMAINING CORD LENGTH CARD -->
-        <div class="glass-card rounded-2xl p-5 border border-amber-500/30 bg-amber-500/5 flex flex-col justify-between relative overflow-hidden">
+        <!-- REMAINING CORD LENGTH CARD (hidden per user request) -->
+        <div id="remainingCordCard" class="hidden glass-card rounded-2xl p-5 border border-amber-500/30 bg-amber-500/5 flex flex-col justify-between relative overflow-hidden">
           <div class="absolute -right-3 -bottom-3 text-amber-800/10 text-8xl font-black pointer-events-none font-mono selection:bg-transparent">3</div>
           <div>
             <div class="flex items-center justify-between gap-2">
-              <span class="text-xs font-bold text-amber-200 uppercase tracking-wider font-sans">Length Left on Reel</span>
+              <span class="text-xs font-bold text-amber-200 uppercase tracking-wider font-sans">1. Starting Reel</span>
               <span class="text-[10px] font-mono text-amber-300 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">Updates After Each Cut</span>
             </div>
             <p class="text-[11px] text-slate-400 mt-1">Remaining cord available for the next cut. The starting length is entered only once.</p>
@@ -1093,7 +1093,7 @@
           </div>
         </div>
 
-        <!-- TOTAL REEL LENGTH TRACKING: only shown when an optional total was saved -->
+        <!-- TOTAL REEL LENGTH TRACKING (hidden per user request) -->
         <div id="totalRemainingCard" class="hidden glass-card rounded-2xl p-5 border border-sky-500/30 bg-sky-500/5 flex flex-col justify-between relative overflow-hidden">
           <div>
             <div class="flex items-center justify-between gap-2">
@@ -1112,8 +1112,8 @@
           </div>
         </div>
 
-        <!-- VISUAL DIAGRAM REPRESENTATION -->
-        <div class="glass-card rounded-2xl p-5 border border-slate-800/80 space-y-3">
+        <!-- VISUAL DIAGRAM REPRESENTATION (hidden per user request) -->
+        <div id="visualSegmentBreakdownCard" class="hidden glass-card rounded-2xl p-5 border border-slate-800/80 space-y-3">
           <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block font-sans">Visual Segment Breakdown</span>
           
           <div class="space-y-2 font-mono text-xs">
@@ -1158,6 +1158,10 @@
             </div>
           </div>
           <div class="flex items-center gap-2">
+            <input id="historyCsvImportInput" type="file" accept=".csv,text/csv" class="hidden" onchange="importHistoryCSV(event)">
+            <button onclick="document.getElementById('historyCsvImportInput').click()" class="px-3 py-1.5 rounded-xl bg-indigo-950 hover:bg-indigo-900 text-indigo-200 text-xs font-mono border border-indigo-800 transition btn-smooth flex items-center gap-1.5">
+              <i class="fa-solid fa-file-import text-indigo-300"></i> Import CSV
+            </button>
             <button onclick="exportHistoryCSV()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono border border-slate-700 transition btn-smooth flex items-center gap-1.5">
               <i class="fa-solid fa-file-csv text-emerald-400"></i> Export CSV
             </button>
@@ -2060,6 +2064,102 @@
       } catch (e) {
         console.warn('LocalStorage save error:', e);
       }
+    }
+
+    // CSV import supports files exported by this calculator and common variants of the column names.
+    function parseCSVRows(text) {
+      const rows = [];
+      let row = [], field = '', quoted = false;
+      text = String(text || '').replace(/^\uFEFF/, '');
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        if (quoted) {
+          if (ch === '"' && text[i + 1] === '"') { field += '"'; i++; }
+          else if (ch === '"') quoted = false;
+          else field += ch;
+        } else if (ch === '"') quoted = true;
+        else if (ch === ',') { row.push(field.trim()); field = ''; }
+        else if (ch === '\n') { row.push(field.trim()); if (row.some(v => v !== '')) rows.push(row); row = []; field = ''; }
+        else if (ch !== '\r') field += ch;
+      }
+      row.push(field.trim());
+      if (row.some(v => v !== '')) rows.push(row);
+      return rows;
+    }
+
+    function normalizeCSVHeader(value) {
+      return String(value || '').toLowerCase().replace(/\([^)]*\)/g, '').replace(/[^a-z0-9]/g, '');
+    }
+
+    function importHistoryCSV(event) {
+      const input = event && event.target;
+      const file = input && input.files && input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const rows = parseCSVRows(reader.result);
+          if (rows.length < 2) throw new Error('The CSV has no history rows.');
+          const headers = rows[0].map(normalizeCSVHeader);
+          const findColumn = (...names) => headers.findIndex(h => names.includes(h));
+          const cols = {
+            timestamp: findColumn('timestamp', 'time', 'date', 'datetime'),
+            initial: findColumn('startingmark', 'initial', 'initialcord', 'startingcord', 'startingreelmark'),
+            target: findColumn('targetmark', 'targetend', 'target', 'targetendmark'),
+            extra: findColumn('safetyslack', 'extrameter', 'extra', 'slack', 'safetyslacklength'),
+            cuttingPoint: findColumn('cuttingpoint', 'cuttingpt', 'cutpoint'),
+            result: findColumn('cutresult', 'result', 'cutlength', 'cutlengthm'),
+            status: findColumn('metercheckstatus', 'status', 'isvalid', 'resultstatus'),
+            remaining: findColumn('totalremainingaftercut', 'remainingaftercut', 'remaining')
+          };
+          if (cols.initial < 0 || cols.target < 0 || cols.extra < 0 || cols.result < 0) {
+            throw new Error('Required columns were not found. Import a CSV exported from the Cord Length Calculator.');
+          }
+          const numberOrNull = value => {
+            if (value === undefined || value === null || String(value).trim() === '') return null;
+            const n = Number(String(value).replace(/\s/g, ''));
+            return Number.isFinite(n) ? Math.round(n * 100) / 100 : null;
+          };
+          const imported = [];
+          for (const values of rows.slice(1)) {
+            const get = key => cols[key] >= 0 ? values[cols[key]] : '';
+            const initial = numberOrNull(get('initial'));
+            const target = numberOrNull(get('target'));
+            const extra = numberOrNull(get('extra'));
+            const result = numberOrNull(get('result'));
+            if (initial === null || target === null || extra === null || result === null) continue;
+            const cuttingPoint = numberOrNull(get('cuttingPoint')) ?? Math.round((target - extra) * 100) / 100;
+            const status = String(get('status')).trim().toUpperCase();
+            const isValid = status ? ['PASS', 'TRUE', 'VALID', 'OK', '1'].includes(status) : true;
+            const item = {
+              timestamp: String(get('timestamp') || 'Imported').trim(),
+              initial, target, extra, cuttingPoint, result,
+              meterCheck: extra,
+              isValid
+            };
+            const remaining = numberOrNull(get('remaining'));
+            if (remaining !== null) item.totalRemainingAfterCut = remaining;
+            imported.push(item);
+          }
+          if (!imported.length) throw new Error('No valid history rows were found in this CSV.');
+          const replace = confirm(`Found ${imported.length} valid history row(s).\n\nOK = replace current history\nCancel = append to current history`);
+          if (replace) savedCutHistory = imported;
+          else savedCutHistory = [...imported, ...savedCutHistory];
+          saveCutHistoryToStorage();
+          renderHistoryTable();
+          showToast(`Imported ${imported.length} history row(s).`, 'success');
+        } catch (err) {
+          console.error('CSV import failed:', err);
+          showToast(err.message || 'Could not import this CSV file.', 'error');
+        } finally {
+          if (input) input.value = '';
+        }
+      };
+      reader.onerror = () => {
+        showToast('Could not read the selected CSV file.', 'error');
+        if (input) input.value = '';
+      };
+      reader.readAsText(file);
     }
 
     function exportHistoryCSV() {

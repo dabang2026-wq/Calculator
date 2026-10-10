@@ -1,90 +1,58 @@
-# Simple Cord Length Calculator
+# Simple Cord Length Calculator — Android App Project
 
-A mobile-first cord length calculator with sequential cut tracking and local data persistence. Developed by **จาตูไหม่**.
+**Brand:** Developed by จาตูไหม่  
+**Application ID:** `com.jatumae.cordlength`
 
-## Features
+This package contains the latest calculator web app bundled as local assets for a native Android shell using Capacitor. The calculator's existing interface and features are included, including customizable Quick Slack Presets.
 
-- Simple, mobile-friendly interface with large touch targets
-- English, Myanmar, and Thai language selector
-- Enter starting cord length once and track the remaining length after each cut
-- Automatically save entries and calculation history on the device using browser storage
-- Cut calculation, meter verification, quick slack presets, and CSV history export
-- PWA install metadata and service-worker caching for offline app-shell access
-- GitHub Pages deployment workflow included
+## Build an installable Android APK
 
-## Run locally
+You need a computer with Node.js (LTS), Android Studio, and an Android SDK installed. This source package does not include a compiled APK because the Android build toolchain is not installed in the packaging environment.
 
-Use an HTTP server instead of opening `index.html` directly:
+1. Extract this ZIP.
+2. Open a terminal in the extracted `cord-mobile-app` folder.
+3. Install dependencies:
 
-```bash
-python -m http.server 8080
-```
+   ```bash
+   npm install
+   ```
 
-Then visit `http://localhost:8080`.
+4. Generate the Android native project:
 
-## Deploy to GitHub Pages
+   ```bash
+   npx cap add android
+   ```
 
-1. Extract the ZIP and upload all project files to a GitHub repository.
-2. Commit to the `main` branch.
-3. In **Settings → Pages**, choose **GitHub Actions** as the build/deployment source.
-4. The included workflow deploys on each push to `main`.
+   If Capacitor says the Android platform already exists, continue to the next step.
 
-## Saved data
+5. Sync the bundled app into Android:
 
-Entries and history are saved locally in the same browser/app storage on this device. They should remain after closing and reopening the app, but clearing site data, changing browsers, or uninstalling/clearing app data may erase them. Local storage is not cloud-synced.
+   ```bash
+   npx cap sync android
+   ```
 
-## Offline note
+6. Open Android Studio:
 
-Open the app once while online so the service worker can cache the app shell. The current HTML still references Tailwind CSS, Font Awesome, and Google Fonts via external CDNs, so a first online load is needed for those assets and they may be unavailable offline unless previously cached. For a fully self-contained offline build, these dependencies should be bundled locally or replaced with local CSS/icons/fonts.
+   ```bash
+   npx cap open android
+   ```
 
-## Project files
+7. In Android Studio, wait for Gradle sync. To make a test build, choose **Build > Build Bundle(s) / APK(s) > Build APK(s)**. Android Studio will show the output location when complete.
 
-- `index.html`
-- `manifest.json`
-- `service-worker.js`
-- `README.md`
-- `LICENSE`
-- `.gitignore`
-- `run-local.bat`
-- `.github/workflows/deploy.yml`
+For a signed release APK, choose **Build > Generate Signed Bundle / APK** and follow Android Studio's signing wizard. Keep the signing key private and backed up.
 
-## License
+## Test on a phone
 
-MIT.
+Enable Developer options and USB debugging on your Android device, connect it to the computer, then use Android Studio's Run button. Alternatively, transfer the generated APK to your phone and install it, allowing installs from that source when Android asks.
 
+## Data and offline behavior
 
-## Responsive UX update
-The interface includes responsive layouts for phones, tablets, desktop, and short landscape screens; accessible focus indicators; zoom-friendly viewport settings; safe-area spacing; and horizontally scrollable history on small screens.
+The calculator is bundled inside the app, so its interface does not need a hosted website to open. User history and preferences are stored locally by the app's WebView origin and are separate from browser-site storage. Uninstalling the app or clearing its app data may remove those local records. Export or back up important records before doing either.
 
+## Project contents
 
-## Daylight usability update
-
-The latest daylight-first interface uses stronger text contrast, larger number inputs, clearer focus states, a more visible Calculate button, improved history modal sizing, better small-screen spacing, and landscape handling. The app keeps English, Myanmar, and Thai options, saved history, remaining-length tracking, and the existing calculation logic.
-
-The service-worker cache was versioned so browsers can pick up the updated app shell. After deployment, refresh the app once while online.
-
-
-## Optional total cord length tracking
-- You can enter the original total cord length once before the first cut.
-- Saving it locks the value and stores it in this browser/site. The app does not offer an edit or remove control.
-- If you leave it blank when making the first cut, total-length tracking is skipped and no total-available-meters card is shown.
-- Resetting the calculator does not clear the saved total length.
-
-
-## Input spacing and performance polish
-- Standardized number and text field padding, minimum height, label line-height, and spacing between form controls.
-- Improved input placeholder contrast and keyboard focus visibility.
-- Kept numeric values aligned with tabular numerals for easier measurement comparison.
-- Reduced card transition work to border and shadow changes instead of animating every property.
-- Updated the service-worker cache version so the new interface can be refreshed after deployment.
-
-
-### Latest usability updates
-- Total cord tracking can now be edited or removed; editing preserves the amount already used where possible. Removing tracking keeps cut history intact.
-- Each history row has its own Remove action in addition to View.
-- Decimal-friendly mobile keypad hints are enabled on all cord measurement inputs, with clearer spacing between action icons and labels.
-
-
-### Customizable Quick Slack Presets
-- Quick preset buttons are displayed in one horizontal row with vivid colored icons.
-- Use **Customize** to change all four values; Save presets stores them locally in the same browser/site, and Default restores 14, 15, 18, and 21 meters.
+- `www/index.html` — calculator interface and logic
+- `www/manifest.json` — web app metadata
+- `www/service-worker.js` — offline shell cache logic
+- `capacitor.config.json` — native app ID and display name
+- `package.json` — Capacitor dependencies and commands

@@ -1,416 +1,500 @@
-<!DOCTYPE html>
-<html lang="en" class="daylight">
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Cord Length Calculator — จาตูไหม่</title>
-<meta name="theme-color" content="#ffffff" />
-<meta name="description" content="Simple Cord Length Calculator with saved entries and cut tracking. Developed by จาตูไหม่." />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="Cord Calc" />
-
-<link rel="manifest" href='data:application/manifest+json,{"name":"Cord Length Calculator","short_name":"Cord Calc","start_url":"./","display":"standalone","background_color":"%23eef2f6","theme_color":"%23ffffff","icons":[{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23f59e0b%22/><path d=%22M30 30 L70 70 M70 30 L30 70%22 stroke=%22%23020617%22 stroke-width=%2212%22 stroke-linecap=%22round%22/></svg>","sizes":"512x512","type":"image/svg+xml"}]}' />
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f59e0b'/><path d='M30 30 L70 70 M70 30 L30 70' stroke='%23020617' stroke-width='12' stroke-linecap='round'/></svg>" />
-
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['Inter','system-ui','-apple-system','BlinkMacSystemFont','sans-serif'],
-        mono: ['JetBrains Mono','ui-monospace','SFMono-Regular','monospace']
-      }
-    }
-  }
-};
-</script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>CordMate — Cord Length Calculator</title>
 <style>
-/* =========================================================
-   CONSOLIDATED DAYLIGHT STYLES
-   ========================================================= */
-:root {
-  color-scheme: light;
-  --bg: #eef2f6;
-  --surface: #ffffff;
-  --surface-2: #f8fafc;
-  --border: #cbd5e1;
-  --border-strong: #94a3b8;
-  --text: #0f172a;
-  --text-2: #334155;
-  --muted: #475569;
-  --amber: #b45309;
-  --amber-dark: #92400e;
-  --green: #047857;
-  --red: #b91c1c;
-  --sky: #0369a1;
-}
-* { box-sizing: border-box; }
-html { min-width: 320px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scroll-padding-top: 5rem; }
-body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: radial-gradient(circle at 10% 0%, rgba(245,158,11,.09), transparent 30rem), var(--bg);
-  color: var(--text);
-  min-width: 320px;
-  overflow-x: hidden;
-  line-height: 1.5;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  padding-bottom: max(1rem, env(safe-area-inset-bottom));
-}
-button, input { font: inherit; }
-button { cursor: pointer; min-height: 46px; -webkit-touch-callout: none; }
-button:disabled { cursor: not-allowed; filter: grayscale(.25); opacity: .55; }
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-input[type=number] { -moz-appearance: textfield; }
-
-/* Card */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-  box-shadow: 0 2px 8px rgba(15,23,42,.05), 0 1px 2px rgba(15,23,42,.04);
-  transition: box-shadow .18s ease, border-color .18s ease;
-}
-.card:hover { box-shadow: 0 5px 16px rgba(15,23,42,.08); }
-
-/* Inputs */
-.field {
-  width: 100%;
-  min-height: 56px;
-  border: 1.5px solid var(--border-strong);
-  border-radius: .75rem;
-  padding: .8rem 3.6rem .8rem 3.2rem;
-  background: #fff;
-  color: var(--text);
-  font-size: 1.05rem;
-  font-weight: 650;
-  font-variant-numeric: tabular-nums;
-  line-height: 1.35;
-  box-shadow: inset 0 1px 2px rgba(15,23,42,.04);
-  transition: border-color .15s, box-shadow .15s;
-}
-.field::placeholder { color: #64748b; opacity: 1; font-weight: 400; }
-.field:focus { outline: none; border-color: var(--amber); box-shadow: 0 0 0 3px rgba(217,119,6,.18); }
-.field:disabled { background: #f1f5f9; color: var(--muted); border-color: var(--border); }
-
-.field-icon {
-  position: absolute; inset: 0 auto 0 0; padding-left: .9rem;
-  display: flex; align-items: center; pointer-events: none;
-  color: var(--muted);
-}
-.field-unit {
-  position: absolute; inset: 0 0 0 auto; padding-right: .9rem;
-  display: flex; align-items: center; pointer-events: none;
-  color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: .72rem; font-weight: 700;
+:root{
+  color-scheme:light;
+  --bg:#ffffff;
+  --ink:#0a0a0a;
+  --ink-2:#374151;
+  --muted:#4b5563;
+  --line:#c9cfd8;
+  --soft:#f7f8fa;
+  --green:#046c3c;
+  --green-bg:#e8f7ef;
+  --red:#b42318;
+  --blue:#0b4fd6;
 }
 
-/* Status banner */
-#statusBanner.pass {
-  border-color: #6ee7b7 !important;
-  background: #ecfdf5 !important;
-  box-shadow: 0 0 0 3px rgba(16,185,129,.10), 0 5px 18px rgba(16,185,129,.12);
-}
-#statusBanner.fail {
-  border-color: #fca5a5 !important;
-  background: #fef2f2 !important;
-  box-shadow: 0 0 0 3px rgba(239,68,68,.10), 0 5px 18px rgba(239,68,68,.12);
-}
-#statusLight.pass { background: #10b981; border-color: #6ee7b7; color: #052e16; }
-#statusLight.fail { background: #ef4444; border-color: #fca5a5; color: #450a0a; }
-#statusTitle.pass { color: var(--green) !important; }
-#statusTitle.fail { color: var(--red) !important; }
-#statusBadge.pass { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
-#statusBadge.fail { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
 
-/* Presets */
-.preset-btn {
-  flex: 1 1 0; min-width: 0;
-  padding: .75rem .35rem;
-  border-radius: .75rem;
-  border-width: 1px;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 800;
-  font-size: .82rem;
-  display: inline-flex; align-items: center; justify-content: center; gap: .35rem;
-  transition: transform .15s, filter .15s;
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font:16px/1.4 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
 }
-.preset-btn:active { transform: scale(.97); }
-.preset-0 { background: linear-gradient(135deg,#fef3c7,#ffedd5); color: #9a3412; border-color: #fdba74; }
-.preset-1 { background: linear-gradient(135deg,#e0f2fe,#cffafe); color: #075985; border-color: #7dd3fc; }
-.preset-2 { background: linear-gradient(135deg,#ede9fe,#fae8ff); color: #5b21b6; border-color: #c4b5fd; }
-.preset-3 { background: linear-gradient(135deg,#d1fae5,#ecfccb); color: #065f46; border-color: #6ee7b7; }
 
-/* Primary action */
-#btnCalculate {
-  background: var(--amber);
-  border: 1px solid var(--amber-dark);
-  color: #fff;
-  min-height: 60px;
-  font-weight: 800;
-  font-size: 1rem;
-  letter-spacing: .015em;
-  border-radius: .85rem;
-  box-shadow: 0 4px 10px rgba(180,83,9,.22);
-  transition: background .15s, transform .15s;
-  display: flex; align-items: center; justify-content: center; gap: .55rem;
+.app{
+  max-width:920px;
+  margin:0 auto;
+  padding:14px 14px 44px;
+  display:grid;
+  gap:12px;
 }
-#btnCalculate:hover { background: var(--amber-dark); }
-#btnCalculate:active { transform: scale(.98); }
 
-/* Small buttons */
-.btn-secondary {
-  padding: .75rem .5rem;
-  border-radius: .75rem;
-  font-weight: 800;
-  font-size: .78rem;
-  display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
-  transition: background .15s, transform .15s;
-  border: 1px solid transparent;
+/* ---------- header ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:2px 0}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.logo{
+  width:44px;height:44px;flex:none;border-radius:12px;
+  background:var(--ink);color:#fff;
+  display:grid;place-items:center;
+  font-size:22px;font-weight:900;
 }
-.btn-secondary:active { transform: scale(.97); }
-.btn-prev { background: #f1f5f9; color: #334155; border-color: #cbd5e1; flex: 0 0 auto; width: 3rem; padding: .75rem 0; }
-.btn-prev:hover:not(:disabled) { background: #e2e8f0; }
-.btn-reset { background: #e2e8f0; color: #1e293b; border-color: #94a3b8; }
-.btn-reset:hover { background: #cbd5e1; }
-.btn-next { background: var(--amber); color: #fff; border-color: var(--amber-dark); }
-.btn-next:hover:not(:disabled) { background: var(--amber-dark); }
+.title{font-size:19px;font-weight:900;letter-spacing:.02em;line-height:1.1}
+.title i{font-style:normal;color:var(--green)}
+.subtitle{
+  font-size:11px;font-weight:700;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);margin-top:3px;
+}
+.save{
+  font-size:12px;font-weight:800;letter-spacing:.04em;
+  border:2px solid var(--green);
+  border-radius:999px;padding:7px 13px;
+  background:var(--green-bg);color:var(--green);
+  white-space:nowrap;
+}
 
-/* Header */
-header {
-  background: rgba(255,255,255,.97);
-  border-bottom: 1px solid var(--border);
-  box-shadow: 0 2px 10px rgba(15,23,42,.06);
-  padding-top: env(safe-area-inset-top);
+/* ---------- big stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.stat{
+  border:2px solid var(--ink);
+  border-radius:14px;
+  background:#fff;
+  padding:12px 14px;
+  min-width:0;
 }
-header h1 { color: var(--text); font-weight: 800; letter-spacing: -.025em; }
-header .sub { color: var(--muted); }
+.stat span{
+  display:block;
+  font-size:11px;font-weight:800;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);
+}
+.stat strong{
+  display:block;margin-top:6px;
+  font:800 clamp(22px,5.6vw,32px)/1.05 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:-.02em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.stat strong span{
+  display:inline;
+  font-size:.5em;font-weight:800;color:var(--muted);
+  letter-spacing:0;margin-left:2px;
+}
+.stat-left{background:var(--green-bg);border-color:var(--green)}
+.stat-left strong{color:var(--green)}
 
-/* Language picker */
-.lang-picker { position: relative; }
-.lang-menu {
-  position: absolute; top: calc(100% + .4rem); right: 0; z-index: 80;
-  min-width: 150px; padding: .35rem;
-  border: 1px solid var(--border); border-radius: .9rem;
-  background: #fff; box-shadow: 0 14px 32px rgba(15,23,42,.18);
+/* ---------- status strip ---------- */
+.statusbar{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.statusbar>div{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  border:2px solid var(--line);
+  border-radius:12px;
+  background:var(--soft);
+  padding:10px 14px;
+  min-width:0;
 }
-.lang-menu[hidden] { display: none !important; }
-.lang-menu button {
-  display: flex; align-items: center; width: 100%;
-  min-height: 44px; padding: .6rem .75rem;
-  border-radius: .55rem; color: var(--text); text-align: left; background: #fff;
-  font-weight: 600; font-size: .85rem;
+.statusbar span{
+  font-size:11px;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);
 }
-.lang-menu button:hover, .lang-menu button[aria-pressed="true"] { background: #fef3c7; }
+.statusbar b{font-size:14px;font-weight:900;letter-spacing:.03em;white-space:nowrap}
 
-/* History table */
-#historyModal, #detailModal {
-  background: rgba(15,23,42,.45);
-  backdrop-filter: blur(3px);
+/* ---------- cards ---------- */
+.card{
+  border:2px solid var(--ink);
+  border-radius:16px;
+  background:#fff;
+  padding:14px;
+  display:grid;
+  gap:12px;
 }
-#historyModal > div, #detailModal > div {
-  background: #fff; border: 1px solid var(--border);
-  box-shadow: 0 20px 50px rgba(15,23,42,.2);
-  border-radius: 1rem;
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card-title{font-size:14px;font-weight:900;letter-spacing:.07em;text-transform:uppercase}
+.chip{
+  font-size:11.5px;font-weight:800;letter-spacing:.05em;
+  border:2px solid var(--line);border-radius:999px;
+  padding:4px 11px;color:var(--muted);background:var(--soft);
+  white-space:nowrap;
 }
-#modalHistoryTableBody tr:nth-child(even) { background: #f8fafc; }
-#modalHistoryTableBody tr:hover { background: #fef9ec !important; }
-#modalHistoryTableBody td, #modalHistoryTableBody th { padding: .7rem .6rem; vertical-align: middle; }
-#modalHistoryTableBody { font-size: .78rem; }
 
-/* Focus */
-:focus-visible { outline: 3px solid rgba(217,119,6,.5) !important; outline-offset: 2px; }
+/* ---------- inputs ---------- */
+.inputs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.field{min-width:0}
+.field label{
+  display:block;font-size:12px;font-weight:800;
+  color:var(--ink-2);margin-bottom:6px;
+}
+.field input{
+  width:100%;
+  border:2px solid var(--ink);
+  border-radius:12px;
+  background:#fff;
+  color:var(--ink);
+  padding:12px;
+  min-height:58px;
+  font:800 24px/1.1 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:-.01em;
+}
+.field input::placeholder{color:#9aa3af;font-weight:700}
+.field input:focus{outline:3px solid var(--blue);outline-offset:2px}
+.field small{display:block;font-size:11.5px;font-weight:600;color:var(--muted);margin-top:5px}
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #e2e8f0; }
-::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background: #64748b; }
+.withstepper{display:flex;gap:6px}
+.withstepper input{flex:1;min-width:0}
+.withstepper button{
+  width:54px;flex:none;padding:0;
+  min-height:58px;font-size:24px;font-weight:900;line-height:1;
+}
 
-/* Mobile */
-@media (max-width: 640px) {
-  body { padding-bottom: calc(6rem + env(safe-area-inset-bottom)); }
-  main { padding-top: .75rem !important; }
-  .card { padding: .95rem !important; }
-  header .max-w-5xl { padding: .55rem .7rem; }
-  header h1 { font-size: .78rem; }
-  header .sub { font-size: .68rem; }
-  #btnCalculate { position: fixed !important; left: .65rem; right: .65rem; bottom: calc(.55rem + env(safe-area-inset-bottom)); width: calc(100% - 1.3rem); z-index: 45; }
-  #toastContainer { bottom: calc(5rem + env(safe-area-inset-bottom)) !important; }
-  .grid.grid-cols-3 > div { justify-content: flex-start !important; }
-  #historyModal { padding: .45rem !important; }
-  #historyModal > div { max-height: calc(100dvh - 1rem); padding: .85rem !important; }
-  #langMenu { position: fixed; top: 4.25rem; right: .65rem; }
+/* number inputs: no spinners */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield;appearance:textfield}
+
+/* ---------- result ---------- */
+.resultbar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  border:2px solid var(--green);
+  background:var(--green-bg);
+  border-radius:14px;
+  padding:12px 16px;
 }
-@media (max-width: 380px) {
-  header h1 { font-size: .72rem; }
-  #langLabel { display: none; }
-  .card { padding: .8rem !important; }
-  #dispCuttingPoint, #dispResult { font-size: 1.7rem !important; }
+.resultbar span{
+  font-size:11.5px;font-weight:900;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--green);
 }
-@media (orientation: landscape) and (max-height: 520px) and (max-width: 900px) {
-  #btnCalculate { position: static !important; width: 100% !important; }
-  body { padding-bottom: 1rem !important; }
+.resultbar strong{
+  font:800 clamp(24px,6vw,34px)/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:-.02em;color:var(--green);white-space:nowrap;
 }
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+.formula{
+  text-align:center;font-size:11.5px;font-weight:600;
+  color:var(--muted);margin-top:-4px;
+}
+
+/* ---------- buttons ---------- */
+button{
+  font:inherit;
+  cursor:pointer;
+  border:2px solid var(--ink);
+  border-radius:12px;
+  background:#fff;
+  color:var(--ink);
+  padding:12px 14px;
+  min-height:52px;
+  font-size:15px;
+  font-weight:800;
+  transition:background .12s, transform .1s, border-color .12s, color .12s;
+}
+button:hover:not(:disabled){background:#f2f4f7}
+button:active:not(:disabled){transform:translateY(1px)}
+button:disabled{opacity:.32;cursor:not-allowed}
+button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+
+.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.primary:hover:not(:disabled){background:#242424}
+.danger{color:var(--red);border-color:var(--red)}
+.danger:hover:not(:disabled){background:#fdeceb}
+
+.btnrow{display:grid;grid-template-columns:1.4fr 1fr;gap:10px}
+.btnrow2{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.btnrow2 button{font-size:13.5px;padding:11px 8px}
+
+/* ---------- history ---------- */
+.tablewrap{
+  overflow-x:auto;
+  border:2px solid var(--ink);
+  border-radius:14px;
+  -webkit-overflow-scrolling:touch;
+}
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+thead th{
+  background:var(--ink);
+  color:#fff;
+  text-align:left;
+  font-size:10.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+  padding:11px 12px;
+  white-space:nowrap;
+}
+thead th:nth-child(2),
+thead th:nth-child(3),
+thead th:nth-child(4),
+thead th:nth-child(5){text-align:right}
+
+tbody td{
+  padding:12px;
+  border-bottom:1px solid #dfe3e9;
+  white-space:nowrap;
+  font-weight:700;
+  color:var(--ink);
+}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:nth-child(even){background:var(--soft)}
+tbody tr[data-i]{cursor:pointer}
+tbody tr[data-i]:hover{background:#eef1f5}
+tbody tr.active{background:var(--green-bg);box-shadow:inset 5px 0 0 var(--green)}
+tbody tr.active td{color:var(--ink)}
+td:first-child{color:var(--muted);font-family:ui-monospace,monospace;font-size:12px;font-weight:800}
+td.num{text-align:right;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:800}
+td.positive{color:var(--green)}
+.empty{
+  text-align:center;color:var(--muted);
+  padding:34px 14px;font-weight:600;white-space:normal;
+}
+
+.card-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  font-size:12px;font-weight:700;color:var(--muted);
+}
+.card-foot b{color:var(--ink);font-weight:900;font-variant-numeric:tabular-nums}
+
+/* ---------- backup ---------- */
+.backup{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.backup button{
+  min-height:48px;font-size:12.5px;font-weight:700;
+  border-color:var(--line);color:var(--ink-2);
+}
+input[type=file]{display:none}
+
+.note{font-size:12px;font-weight:600;color:var(--muted);line-height:1.5;padding:0 2px}
+
+/* ---------- toast ---------- */
+.toast{
+  position:fixed;left:50%;bottom:20px;z-index:20;
+  transform:translate(-50%,18px);
+  opacity:0;pointer-events:none;
+  max-width:min(92vw,420px);
+  padding:13px 18px;
+  border-radius:999px;
+  background:var(--ink);
+  color:#fff;
+  font-size:13.5px;font-weight:800;
+  text-align:center;
+  transition:opacity .2s, transform .2s;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- mobile ---------- */
+@media(max-width:720px){
+  .app{padding:10px 10px 36px;gap:10px}
+  .logo{width:40px;height:40px;font-size:20px;border-radius:11px}
+  .title{font-size:17px}
+  .subtitle{font-size:10px}
+  .save{font-size:11px;padding:6px 11px}
+
+  .stats{gap:8px}
+  .stat{padding:10px 11px;border-radius:12px}
+  .stat span{font-size:10px;letter-spacing:.07em}
+  .stat strong{font-size:clamp(18px,5.8vw,25px)}
+
+  .statusbar{gap:8px}
+  .statusbar>div{padding:9px 12px;border-radius:11px}
+  .statusbar b{font-size:12.5px}
+
+  .card{padding:12px;gap:10px;border-radius:14px}
+  .inputs{grid-template-columns:1fr 1fr}
+  .inputs .field:last-child{grid-column:1/-1}
+  .field input{font-size:22px;min-height:54px;padding:11px}
+  .withstepper button{min-height:54px;width:50px;font-size:22px}
+
+  .resultbar{padding:11px 13px}
+  .resultbar span{font-size:10.5px}
+  .resultbar strong{font-size:clamp(22px,6.5vw,28px)}
+
+  .btnrow{grid-template-columns:1.35fr 1fr;gap:8px}
+  .btnrow button{font-size:14px;padding:12px 8px}
+  .btnrow2{grid-template-columns:1fr 1fr;gap:8px}
+  .btnrow2 #clearBtn{grid-column:1/-1}
+
+  .backup{grid-template-columns:1fr 1fr}
+  thead th{padding:9px 10px;font-size:10px}
+  tbody td{padding:10px;font-size:13.5px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none!important;animation:none!important}
 }
 </style>
 </head>
+<body>
+<main class="app">
 
-<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-amber-500 selection:text-slate-950">
-
-<!-- ================= HEADER ================= -->
-<header class="w-full sticky top-0 z-30">
-  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
-    <div class="flex items-center gap-3 min-w-0">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 shadow-md shadow-amber-500/20 font-black text-base shrink-0">
-        <i class="fa-solid fa-scissors"></i>
-      </div>
-      <div class="min-w-0">
-        <h1 class="text-sm sm:text-base leading-tight flex items-center gap-2">
-          <span data-i18n="app.title">CORD LENGTH CALCULATOR</span>
-          <span class="hidden sm:inline text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 border border-amber-200" data-i18n="app.offline">OFFLINE</span>
-        </h1>
-        <p class="sub text-[11px] leading-snug truncate">
-          <span data-i18n="app.developedBy">Developed by</span>
-          <strong class="font-semibold text-amber-700">จาตูไหม่</strong>
-        </p>
+  <header class="top">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">↗</div>
+      <div>
+        <div class="title">CORD<i>MATE</i></div>
+        <div class="subtitle">Length · Cut · Remaining</div>
       </div>
     </div>
+    <div class="save" id="saveState" role="status">● AUTO-SAVED</div>
+  </header>
 
-    <div class="flex items-center gap-1.5 sm:gap-2">
-      <!-- Language picker -->
-      <div class="lang-picker">
-        <button id="langToggle" onclick="toggleLangMenu(event)" aria-haspopup="true" aria-expanded="false"
-          class="px-2.5 py-2 rounded-xl bg-white border border-slate-300 text-slate-800 font-bold text-xs shadow-sm flex items-center gap-1.5">
-          <span aria-hidden="true">🌐</span>
-          <span id="langLabel">English</span>
-          <span class="text-slate-400 text-[10px]">▾</span>
-        </button>
-        <div id="langMenu" class="lang-menu" role="menu" hidden>
-          <button type="button" data-lang="en" onclick="setLanguage('en')" role="menuitem">English</button>
-          <button type="button" data-lang="my" onclick="setLanguage('my')" role="menuitem">မြန်မာ</button>
-          <button type="button" data-lang="th" onclick="setLanguage('th')" role="menuitem">ไทย</button>
-        </div>
-      </div>
+  <section class="stats" aria-label="Reel summary">
+    <div class="stat"><span>Starting reel</span><strong id="mStart">0.00 <span>m</span></strong></div>
+    <div class="stat"><span>Total cut</span><strong id="mCut">0.00 <span>m</span></strong></div>
+    <div class="stat stat-left"><span>Length left</span><strong id="mLeft">0.00 <span>m</span></strong></div>
+  </section>
 
-      <!-- Sound toggle -->
-      <button onclick="toggleAudio()" id="btnAudio" title="Sound"
-        class="p-2 rounded-xl bg-white border border-slate-300 text-slate-600 hover:text-amber-600 text-xs">
-        <i id="soundIcon" class="fa-solid fa-volume-high text-amber-600"></i>
-      </button>
-
-      <!-- History button -->
-      <button onclick="openHistoryModal()"
-        class="px-2.5 sm:px-3 py-2 rounded-xl bg-white border border-slate-300 text-amber-700 font-semibold text-xs flex items-center gap-2 shadow-sm">
-        <i class="fa-solid fa-clock-rotate-left"></i>
-        <span class="hidden sm:inline" data-i18n="history.short">Log</span>
-        <span id="logCountBadge" class="bg-amber-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full">0</span>
-      </button>
-    </div>
-  </div>
-</header>
-
-<!-- ================= MAIN ================= -->
-<main class="max-w-5xl w-full mx-auto px-4 pt-5 space-y-4 flex-1">
-
-  <!-- STATUS BANNER -->
-  <div id="statusBanner" class="w-full rounded-2xl p-4 sm:p-5 card flex flex-col sm:flex-row items-center justify-between gap-4">
-    <div class="flex items-center gap-4 w-full sm:w-auto">
-      <div id="statusLight" class="w-12 h-12 rounded-2xl bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-500 text-xl font-bold transition-all duration-300 shrink-0">
-        <i id="statusIcon" class="fa-solid fa-minus"></i>
-      </div>
-      <div class="min-w-0">
-        <div class="flex items-center gap-2 flex-wrap">
-          <span id="statusTitle" class="font-bold text-base sm:text-lg text-slate-700" data-i18n="status.standby">STANDBY / READY</span>
-          <span id="statusBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-slate-200 text-slate-600 border border-slate-300" data-i18n="status.noCalc">NO CALCULATIONS YET</span>
-        </div>
-        <p id="statusDescription" class="text-xs text-slate-500 mt-0.5" data-i18n="status.hint">Enter values below and tap Calculate.</p>
-      </div>
-    </div>
-    <div class="w-full sm:w-auto bg-slate-50 px-4 py-2.5 rounded-xl border border-slate-200 flex sm:flex-col justify-between items-center sm:items-end font-mono shrink-0">
-      <span class="text-[10px] text-slate-500 uppercase tracking-wider font-sans font-bold" data-i18n="status.meterCheck">Meter Check</span>
-      <span id="dispMeterCheck" class="text-xl sm:text-2xl font-black text-slate-500">-- m</span>
-    </div>
+  <div class="statusbar">
+    <div><span>Saved records</span><b id="mCount">0</b></div>
+    <div><span>Reel status</span><b id="mStatus">SET REEL</b></div>
   </div>
 
-  <!-- GRID -->
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-
-    <!-- LEFT: PARAMETERS -->
-    <div class="lg:col-span-7 card p-5 sm:p-6 space-y-5">
-      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
-        <h2 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
-          <i class="fa-solid fa-sliders text-amber-600"></i>
-          <span data-i18n="params.title">Cut Parameters</span>
-        </h2>
-        <span id="seqBadge" class="text-[11px] font-mono px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 border border-amber-200">
-          <span data-i18n="params.cutNum">Cut #</span>1 <span data-i18n="params.inSequence">in Sequence</span>
-        </span>
+  <section class="card">
+    <div class="inputs">
+      <div class="field">
+        <label for="startInput">Starting reel (m)</label>
+        <input id="startInput" type="number" min="0" step=".01" inputmode="decimal" placeholder="100.00">
+        <small>Full reel length</small>
       </div>
-
-      <!-- Starting Reel Mark -->
-      <div class="space-y-1.5">
-        <div class="flex items-center justify-between gap-2 flex-wrap">
-          <label for="initialCord" class="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-            <span data-i18n="params.initial">Starting Reel Mark</span>
-            <span class="text-slate-500 font-mono text-[11px]" data-i18n="params.initialSub">(Initial Cord Value)</span>
-          </label>
-          <div class="flex items-center gap-1">
-            <span id="lockBadge" class="text-[10px] font-mono text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200" data-i18n="params.editableFirst">Editable (First Cut)</span>
-            <button id="btnUnlock" onclick="unlockInitialInput()" class="hidden text-[11px] text-amber-700 hover:text-amber-800 underline font-mono" data-i18n="params.unlock">Unlock</button>
-          </div>
-        </div>
-        <div class="relative">
-          <div class="field-icon"><i class="fa-solid fa-drum"></i></div>
-          <input type="number" inputmode="decimal" step="0.01" id="initialCord" placeholder="500" class="field" />
-          <div class="field-unit" data-i18n="params.meter">METER</div>
-        </div>
-        <p class="text-[11px] text-slate-500" data-i18n="params.initialHint">Set once for the first cut. Next cuts carry forward automatically.</p>
+      <div class="field">
+        <label for="cutInput">Cut length (m)</label>
+        <input id="cutInput" type="number" min="0" step=".01" inputmode="decimal" placeholder="2.50">
+        <small>Length for this cut</small>
       </div>
-
-      <!-- Target End Mark -->
-      <div class="space-y-1.5">
-        <label for="targetCord" class="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-          <span data-i18n="params.target">Target End Mark</span>
-          <span class="text-slate-500 font-mono text-[11px]" data-i18n="params.targetSub">(Target Cord Value)</span>
-        </label>
-        <div class="relative">
-          <div class="field-icon"><i class="fa-solid fa-flag-checkered text-amber-500"></i></div>
-          <input type="number" inputmode="decimal" step="0.01" id="targetCord" placeholder="150" class="field" />
-          <div class="field-unit" data-i18n="params.meter">METER</div>
+      <div class="field">
+        <label for="slackInput">Allowance (m)</label>
+        <div class="withstepper">
+          <input id="slackInput" type="number" min="0" step=".01" inputmode="decimal" value="0">
+          <button id="minusBtn" type="button" aria-label="Subtract 0.1 m">−</button>
+          <button id="plusBtn" type="button" aria-label="Add 0.1 m">+</button>
         </div>
+        <small>Extra length per cut</small>
       </div>
+    </div>
 
-      <!-- Safety Slack -->
-      <div class="space-y-2">
-        <div class="flex items-center justify-between gap-2 flex-wrap">
-          <label for="extraMeter" class="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-            <span data-i18n="params.slack">Safety Slack</span>
-            <span class="text-slate-500 font-mono text-[11px]" data-i18n="params.slackSub">(Extra Meter)</span>
-          </label>
-          <span class="text-amber-700 text-[11px] font-semibold" data-i18n="params.slackNote">Subtracted from target</span>
-        </div>
-        <div class="relative">
-          <div class="field-icon"><i class="fa-solid fa-shield-halved text-sky-500"></i></div>
-          <input type="number" inputmode="decimal" step="0.01" id="extraMeter" placeholder="15" value="15" class="field" />
-          <div class="field-unit" data-i18n="params.meter">METER</div>
-        </div>
+    <div class="resultbar">
+      <span>Remaining after this cut</span>
+      <strong id="previewLeft">0.00 m</strong>
+    </div>
+    <div class="formula">Starting reel − saved cuts − cut − allowance = remaining</div>
 
-        <!-- Presets -->
-        <div class="space-y-2 pt-1">
-          <div class="flex items-center justify-between gap-2 flex-wrap">
-            <span class="text-xs text-slate-600 font-semibold">
-              <i class="fa-solid fa-bolt text-amber-500 mr-1.5"></i>
-              <span data-i18n="presets.title">Quick Slack Presets</span>
-            </span>
-            <button type="button" onclick="togglePresetEditor()" id="editPresetsBtn"
-              class="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-100 text-indigo-700 border border-indigo-200 hover:bg-indigo-200"
-              aria-controls="presetEditor" aria-expanded="false">
-              <i class="fa-solid fa-sliders"></i>
-              <span data-i18n="presets.customize">Customize</sp
+    <div class="btnrow">
+      <button id="nextBtn" class="primary" type="button">＋ Save this cut</button>
+      <button id="undoBtn" class="danger" type="button">Undo last</button>
+    </div>
+    <div class="btnrow2">
+      <button id="prevBtn" type="button">← Previous</button>
+      <button id="resetCutBtn" type="button">Reset fields</button>
+      <button id="clearBtn" class="danger" type="button">Clear reel</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <div class="card-title">Cut history</div>
+      <div class="chip" id="historyCount">0 records</div>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Cut m</th><th>Allowance</th><th>Used m</th><th>Left m</th><th>Time</th></tr>
+        </thead>
+        <tbody id="historyBody">
+          <tr><td colspan="6" class="empty">Set a reel length and save your first cut.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card-foot">
+      <span>Tap a row to review</span>
+      <span><b id="historyTotal">0.00 m</b> total used</span>
+    </div>
+  </section>
+
+  <div class="backup">
+    <button id="exportCsvBtn" type="button">Export CSV</button>
+    <button id="exportJsonBtn" type="button">Backup JSON</button>
+    <button id="importCsvBtn" type="button">Import CSV</button>
+    <button id="importJsonBtn" type="button">Restore JSON</button>
+    <input id="csvFile" type="file" accept=".csv,text/csv">
+    <input id="jsonFile" type="file" accept=".json,application/json">
+  </div>
+
+  <div class="card-foot">
+    <span>Local autosave <b>ON</b></span>
+    <span id="storageNote">Saved on this device</span>
+  </div>
+
+  <p class="note">Saved in this browser on this device. Export a JSON backup before clearing browser data or moving to another device.</p>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+var KEY='cordmate.v3.state';
+var state={starting:0,cut:0,slack:0,history:[],cursor:-1};
+var $=function(id){return document.getElementById(id)};
+var start=$('startInput'),cut=$('cutInput'),slack=$('slackInput'),timer=null,toastTimer=null;
+function n(v){if(v===null||v===undefined||String(v).trim()==='')return 0;var x=Number(v);return Number.isFinite(x)&&x>0?x:0}
+function f(v){return (Math.round((Number(v)||0)*100)/100).toFixed(2)}
+function used(){return state.history.reduce(function(a,r){return a+n(r.used)},0)}
+function left(){return Math.max(0,state.starting-used())}
+function note(s){$('toast').textContent=s;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){$('toast').classList.remove('show')},2300)}
+function normalizedRecord(r,i){var c=n(r&&r.cut),s=n(r&&r.slack);return {cut:c,slack:s,used:n(r&&r.used)||c+s,left:n(r&&r.left),time:String(r&&r.time||'—'),id:String(r&&r.id||('record-'+Date.now()+'-'+i))}}
+function save(){
+ state.starting=n(start.value);state.cut=n(cut.value);state.slack=n(slack.value);
+ try{localStorage.setItem(KEY,JSON.stringify(state));$('saveState').textContent='● AUTO-SAVED';$('storageNote').textContent='Saved on this device'}
+ catch(e){$('saveState').textContent='SAVE ISSUE';$('storageNote').textContent='Storage unavailable'}
+}
+function render(){
+ state.starting=n(start.value);state.cut=n(cut.value);state.slack=n(slack.value);
+ var u=used(),l=left();
+ $('mStart').innerHTML=f(state.starting)+' <span>m</span>';$('mCut').innerHTML=f(u)+' <span>m</span>';$('mLeft').innerHTML=f(l)+' <span>m</span>';
+ $('mCount').textContent=state.history.length;$('mStatus').textContent=state.starting<=0?'SET REEL':l<=0?'EMPTY':l<state.starting*.1?'LOW':'READY';
+ $('previewLeft').textContent=f(Math.max(0,l-state.cut-state.slack))+' m';
+ $('nextBtn').disabled=state.starting<=0||state.cut<=0||state.cut+state.slack>l+.000001;
+ $('prevBtn').disabled=!state.history.length;
+ $('undoBtn').disabled=!state.history.length;
+ $('historyCount').textContent=state.history.length+' record'+(state.history.length===1?'':'s');$('historyTotal').textContent=f(u)+' m';
+ var b=$('historyBody');
+ if(!state.history.length){b.innerHTML='<tr><td colspan="6" class="empty">Set a reel length and save your first cut.</td></tr>';return}
+ b.innerHTML=state.history.map(function(r,i){return '<tr data-i="'+i+'" class="'+(i===state.cursor?'active':'')+'"><td>'+String(i+1).padStart(2,'0')+'</td><td class="num">'+f(r.cut)+'</td><td class="num">'+f(r.slack)+'</td><td class="num">'+f(r.used)+'</td><td class="num positive">'+f(r.left)+'</td><td>'+String(r.time||'—').replace(/[&<>"]/g,'')+'</td></tr>'}).reverse().join('');
+ Array.prototype.forEach.call(b.querySelectorAll('tr[data-i]'),function(tr){tr.onclick=function(){state.cursor=Number(tr.dataset.i);var r=state.history[state.cursor];cut.value=f(r.cut);slack.value=f(r.slack);save();render()}});
+}
+function add(){
+ state.starting=n(start.value);state.cut=n(cut.value);state.slack=n(slack.value);
+ var c=state.cut,s=state.slack,u=c+s;
+ if(state.starting<=0){note('Enter starting reel length first');start.focus();return false}
+ if(c<=0){note('Enter a cut length greater than zero');cut.focus();return false}
+ var l=left();if(u>l+.000001){note('Not enough cord left on this reel');return false}
+ var d=new Date(),id='cut-'+d.getTime()+'-'+Math.random().toString(36).slice(2,8);
+ state.history.push({cut:c,slack:s,used:u,left:Math.max(0,l-u),time:d.toLocaleString(),id:id});
+ state.cursor=state.history.length-1;
+ cut.value='';state.cut=0;save();render();note('Cut saved · '+f(u)+' m used');cut.focus();return true;
+}
+function undo(){if(!state.history.length){note('No cut to undo');return}state.history.pop();state.cursor=state.history.length-1;save();render();note('Last cut removed')}
+function move(d){
+ if(!state.history.length){note('No history to navigate');return}
+ var next=state.cursor<0?state.history.length-1:state.cursor+d;
+ state.cursor=Math.min(Math.max(0,next),state.history.length-1);
+ var r=state.history[state.cursor];cut.value=f(r.cut);slack.value=f(r.slack);save();render();
+}
+function clearReel(){
+ if(!confirm('Clear this reel and all cut history on this device? Export a backup first if needed.'))return;
+ state={starting:0,cut:0,slack:0,history:[],cursor:-1};start.value='';cut.value='';slack.value='0';save();render();note('Reel cleared');
+}
+function dl(name,type,content){var blob=new Blob([content],{type:type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url)},1000)}
+function csvq(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'}
+function exportCsv(){var rows=[['number','cut_m','allowance_m','total_used_m','remaining_m','time','record_id']];state.history.forEach(function(r,i){rows.push([i+1,r.cut,r.slack,r.used,r.left,r.time,r.id])});dl('cordmate-history-'+new Date().toISOString().slice(0,10)+'.csv','text/csv;charset=utf-8','\ufeff'+rows.map(function(r){return r.map(csvq).join(',')}).join('\r\n'));note('History CSV exported')}
+function exportJson(){save();dl('cordmate-backup-'+new Date().toISOString().slice(0,10)+'.json','application/json;charset=utf-8',JSON.stringify({app:'CordMate',version:3,exportedAt:new Date().toISOString(),data:state},null,2));note('Full JSON backup exported')}
+function parseCsv(t){
+ var rows=[],row=[],cell='',q=false;
+ for(var i=0;i<t.length;i++){var c=t[i],nx=t[i+1];if(q){if(c==='"'&&nx==='"'){cell+='"';i++}else if(c==='"')q=false;else cell+=c}else if(c==='"')q=true;else if(c===','){row.push(cell);cell=''}else if(c==='\n'){row.push(cell);rows.push(row);row=[];cell=''}else if(c!=='\r')cell+=c}
+ if(cell||row.length){row.push(cell);rows.push(row)}return rows;
+}
+function importCsv(file){
+ var rd=new FileReader();rd.onload=function(){try{
+ var rows=parseCsv(String(rd.result||''));if(rows.length<2)throw Error('No history rows found');
+ var h=rows[0].map(function(x){return x.trim().toLowerCase()}),ix=function(a,b){var i=h.indexOf(a);return i<0
